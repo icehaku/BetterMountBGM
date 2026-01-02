@@ -25,7 +25,11 @@ public class ConfigWindow : Window, IDisposable
     private SortColumn currentSortColumn = SortColumn.Name;
     private bool sortDescending = false;
     private bool showLockedMounts = false;
-    private bool showMissingData = false;  // NOVO: filtro para missing data
+    private bool showMissingData = false;
+
+    // NOVO: Filtro por Type
+    private string selectedTypeFilter = "All Types";
+    private List<string> availableTypes = new();
 
     // Dicionário temporário para edição de BGM IDs
     private Dictionary<uint, string> bgmInputs = new();
@@ -34,7 +38,8 @@ public class ConfigWindow : Window, IDisposable
     {
         Name,
         Id,
-        Unlocked
+        Unlocked,
+        Type  // NOVO: Ordenação por Type
     }
 
     public ConfigWindow(Plugin plugin) : base("Mount Music Configuration###MountMusicConfig")
@@ -42,15 +47,18 @@ public class ConfigWindow : Window, IDisposable
         this.plugin = plugin;
         configuration = plugin.Configuration;
 
-        Size = new Vector2(1000, 600);
+        Size = new Vector2(1100, 600);  // Aumentado para acomodar nova coluna
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(800, 400),
+            MinimumSize = new Vector2(900, 400),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
 
         // Carregar database de informações da wiki
         MountSourceHelper.LoadDatabase(Plugin.PluginInterface);
+
+        // Carregar tipos disponíveis
+        LoadAvailableTypes();
     }
 
     public void Dispose() { }
@@ -86,8 +94,12 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Spacing();
 
+        // ═══════════════════════════════════════════════════════════════
+        // LINHA 1: BUSCA + SORT BY + FILTER TYPE
+        // ═══════════════════════════════════════════════════════════════
+
         // Campo de busca
-        ImGui.SetNextItemWidth(300);
+        ImGui.SetNextItemWidth(250);
         if (ImGui.InputTextWithHint("##search", "Search mounts...", ref searchFilter, 100))
         {
             // Filtro é aplicado ao renderizar a tabela
@@ -98,12 +110,13 @@ public class ConfigWindow : Window, IDisposable
         // Dropdown de ordenação
         ImGui.Text("Sort by:");
         ImGui.SameLine();
-        ImGui.SetNextItemWidth(150);
+        ImGui.SetNextItemWidth(120);
         string sortLabel = currentSortColumn switch
         {
             SortColumn.Name => "Alphabet",
             SortColumn.Id => "Id",
             SortColumn.Unlocked => "Unlocked",
+            SortColumn.Type => "Type",  // NOVO
             _ => "Alphabet"
         };
 
@@ -115,7 +128,27 @@ public class ConfigWindow : Window, IDisposable
                 currentSortColumn = SortColumn.Id;
             if (ImGui.Selectable("Unlocked", currentSortColumn == SortColumn.Unlocked))
                 currentSortColumn = SortColumn.Unlocked;
+            if (ImGui.Selectable("Type", currentSortColumn == SortColumn.Type))  // NOVO
+                currentSortColumn = SortColumn.Type;
 
+            ImGui.EndCombo();
+        }
+
+        ImGui.SameLine();
+
+        // NOVO: Dropdown de filtro por Type
+        ImGui.Text("Filter Type:");
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(150);
+        if (ImGui.BeginCombo("##filtertype", selectedTypeFilter))
+        {
+            foreach (var type in availableTypes)
+            {
+                if (ImGui.Selectable(type, selectedTypeFilter == type))
+                {
+                    selectedTypeFilter = type;
+                }
+            }
             ImGui.EndCombo();
         }
 
@@ -137,17 +170,20 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Spacing();
 
-        // Checkboxes de filtro
+        // ═══════════════════════════════════════════════════════════════
+        // LINHA 2: CHECKBOXES DE FILTRO
+        // ═══════════════════════════════════════════════════════════════
+
         ImGui.Checkbox("Show Locked Mounts", ref showLockedMounts);
         ImGui.SameLine();
-        ImGui.Checkbox("Show Missing Data", ref showMissingData);  // NOVO
+        ImGui.Checkbox("Show Missing Data", ref showMissingData);
 
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
 
         // ═══════════════════════════════════════════════════════════════
-        // TABELA DE MONTARIAS (5 colunas, SEM coluna Missing Data)
+        // TABELA DE MONTARIAS (6 colunas: NOVA coluna Type)
         // ═══════════════════════════════════════════════════════════════
 
         var filteredMounts = GetFilteredAndSortedMounts();
@@ -158,14 +194,16 @@ public class ConfigWindow : Window, IDisposable
             ImGuiTableFlags.ScrollY |
             ImGuiTableFlags.Resizable;
 
-        if (ImGui.BeginTable("MountsTable", 5, tableFlags, new Vector2(0, -30)))
+        if (ImGui.BeginTable("MountsTable", 6, tableFlags, new Vector2(0, -30)))  // 6 colunas agora
         {
             // Setup de colunas
             ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthFixed, 50);
             ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed, 200);
             ImGui.TableSetupColumn("Unlocked", ImGuiTableColumnFlags.WidthFixed, 80);
+            ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 150);  // NOVA coluna
             ImGui.TableSetupColumn("Acquired By", ImGuiTableColumnFlags.WidthStretch);
             ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthFixed, 100);
+            ImGui.TableHeadersRow();  // NOVO: Headers visíveis
 
             // Renderiza cada montaria
             foreach (var mount in filteredMounts)
@@ -174,6 +212,7 @@ public class ConfigWindow : Window, IDisposable
 
                 // Verifica se tem dados no JSON
                 bool hasMissingData = MountSourceHelper.GetMountSourceInfo(mount.Name) == null;
+                var mountInfo = MountSourceHelper.GetMountSourceInfo(mount.Name);
 
                 // Coluna 1: Ícone
                 ImGui.TableSetColumnIndex(0);
@@ -183,6 +222,7 @@ public class ConfigWindow : Window, IDisposable
                 ImGui.TableSetColumnIndex(1);
                 ImGui.AlignTextToFramePadding();
                 ImGui.Text(mount.Name);
+                //ImGui.Text($"{mount.Name} (ID: {mount.MountId})");
 
                 // Coluna 3: Status (Unlocked/Locked)
                 ImGui.TableSetColumnIndex(2);
@@ -196,8 +236,22 @@ public class ConfigWindow : Window, IDisposable
                     ImGui.TextColored(new Vector4(1f, 0.3f, 0.3f, 1), "Locked");
                 }
 
-                // Coluna 4: Acquired By
+                // Coluna 4: Type (NOVA)
                 ImGui.TableSetColumnIndex(3);
+                ImGui.AlignTextToFramePadding();
+                if (hasMissingData || mountInfo == null)
+                {
+                    ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1), "Unknown");
+                }
+                else
+                {
+                    // Colorir por categoria para facilitar visualização
+                    var typeColor = GetTypeColor(mountInfo.Type);
+                    ImGui.TextColored(typeColor, mountInfo.Type);
+                }
+
+                // Coluna 5: Acquired By
+                ImGui.TableSetColumnIndex(4);
                 ImGui.AlignTextToFramePadding();
 
                 if (hasMissingData)
@@ -210,8 +264,8 @@ public class ConfigWindow : Window, IDisposable
                     ImGui.TextWrapped(acquiredBy);
                 }
 
-                // Coluna 5: Custom BGM (input field)
-                ImGui.TableSetColumnIndex(4);
+                // Coluna 6: Custom BGM (input field)
+                ImGui.TableSetColumnIndex(5);
                 RenderCustomBGMInput(mount);
             }
 
@@ -224,8 +278,89 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Spacing();
         ImGui.Separator();
+
+        var filteredCount = filteredMounts.Count;
         ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1),
-            $"💡 Tip: Leave 'Custom BGM' empty to use default mount music  |  Total configured: {configuration.MountMusicOverrides.Count}");
+            $"💡 Tip: Leave 'Custom BGM' empty to use default mount music  |  Showing: {filteredCount} mounts  |  Configured: {configuration.MountMusicOverrides.Count}");
+    }
+
+    /// <summary>
+    /// Retorna cor baseada no tipo de montaria para melhor visualização
+    /// </summary>
+    private Vector4 GetTypeColor(string type)
+    {
+        return type switch
+        {
+            //verde limao
+            "Main Scenario" => new Vector4(0.45f, 0.95f, 0.05f, 1f),
+
+            // Verde
+            "Quests" => new Vector4(0.2f, 1f, 0.2f, 1),       
+
+            // Dourado (Mogstation)
+            "Premium" => new Vector4(1f, 0.84f, 0f, 1),      
+            "Campaigns" => new Vector4(1f, 0.84f, 0f, 1),
+
+            // Laranja
+            "Limited" => new Vector4(1f, 0.84f, 0f, 1),
+            "Seasonal Event" => new Vector4(1f, 0.84f, 0f, 1),  
+            "Gold Saucer" => new Vector4(1f, 0.65f, 0f, 1),
+
+            // Amarelo
+            "Gil" => new Vector4(1f, 1f, 0f, 1f),            
+            "Treasure Hunt" => new Vector4(1f, 1f, 0f, 1f),
+
+            // Azul
+            "Dungeons" => new Vector4(0.2f, 0.6f, 1f, 1),
+            "V&C Dungeons" => new Vector4(0.2f, 0.6f, 1f, 1),
+
+            // Vermelho
+            "Trials" => new Vector4(0.8f, 0.2f, 0.2f, 1),
+
+            // Roxo
+            "Raids" => new Vector4(0.6f, 0.2f, 0.8f, 1),
+            "Chaotic Alliance Raid" => new Vector4(0.6f, 0.2f, 0.8f, 1),
+
+            // Verde claro
+            "Achievements" => new Vector4(0.4f, 0.8f, 0.4f, 1),
+            "Achievement Certificates" => new Vector4(0.4f, 0.8f, 0.4f, 1),
+
+            // Roxo escuro
+            "Deep Dungeon" => new Vector4(0.5f, 0.3f, 0.7f, 1), 
+            "FATE" => new Vector4(0.5f, 0.3f, 0.7f, 1),
+            "Shared FATEs" => new Vector4(0.5f, 0.3f, 0.7f, 1),
+
+            // Vermelho claro
+            "PvP" => new Vector4(1f, 0.4f, 0.4f, 1),         
+            "PvP (Ranked)" => new Vector4(1f, 0.4f, 0.4f, 1),
+
+            // Amarelo escuro
+            "Crafting" => new Vector4(0.8f, 0.6f, 0.2f, 1),
+            "Gathering" => new Vector4(0.8f, 0.6f, 0.2f, 1),
+            "The Hunt" => new Vector4(0.8f, 0.6f, 0.2f, 1),
+
+            // Ciano
+            "Occult Crescent" => new Vector4(0.2f, 0.8f, 1f, 1),
+            "Bozja" => new Vector4(0.2f, 0.8f, 1f, 1),
+            "Ishgardian Restoration" => new Vector4(0.2f, 0.8f, 1f, 1),
+            "Cosmic Exploration" => new Vector4(0.2f, 0.8f, 1f, 1),
+
+            // Azul
+            "Heaven-on-High" => new Vector4(0f, 0.4f, 1f, 1f),
+            "Eureka" => new Vector4(0f, 0.4f, 1f, 1f),
+            "Eureka Orthos" => new Vector4(0f, 0.4f, 1f, 1f),
+            "Palace of the Dead" => new Vector4(0f, 0.4f, 1f, 1f),
+            "Pilgrim's Traverse" => new Vector4(0f, 0.4f, 1f, 1f),           
+
+            // Rosa 
+            "Custom Deliveries" => new Vector4(1f, 0.4f, 1f, 1f),
+            "Faux Hollows" => new Vector4(1f, 0.4f, 1f, 1f),
+            "Wondrous Tails" => new Vector4(1f, 0.4f, 1f, 1f),
+            "Allied Societies" => new Vector4(1f, 0.4f, 1f, 1f),
+            "Island Sanctuary" => new Vector4(1f, 0.4f, 1f, 1f),
+
+            _ => new Vector4(1f, 1f, 1f, 1)                  // Branco (padrão)
+        };
     }
 
     private void RenderMountIcon(MountInfo mount)
@@ -291,10 +426,23 @@ public class ConfigWindow : Window, IDisposable
 
         var filtered = sourceList.AsEnumerable();
 
+        // NOVO: Filtrar apenas montarias com ícone válido
+        filtered = filtered.Where(m => m.Icon > 0);
+
         // FILTRO: Show Missing Data
         if (showMissingData)
         {
             filtered = filtered.Where(m => MountSourceHelper.GetMountSourceInfo(m.Name) == null);
+        }
+
+        // FILTRO: Por Type (NOVO)
+        if (selectedTypeFilter != "All Types")
+        {
+            filtered = filtered.Where(m =>
+            {
+                var info = MountSourceHelper.GetMountSourceInfo(m.Name);
+                return info != null && info.Type == selectedTypeFilter;
+            });
         }
 
         // Filtro por busca
@@ -320,10 +468,72 @@ public class ConfigWindow : Window, IDisposable
                 ? filtered.OrderByDescending(m => m.IsUnlocked).ThenBy(m => m.Name)
                 : filtered.OrderBy(m => m.Name),
 
+            // NOVO: Ordenação por Type
+            SortColumn.Type => filtered.OrderBy(m =>
+            {
+                var info = MountSourceHelper.GetMountSourceInfo(m.Name);
+                return info?.Type ?? "ZZZ_Unknown";  // Unknown vai pro final
+            }).ThenBy(m => m.Name),
+
             _ => filtered.OrderBy(m => m.Name)
         };
 
         return filtered.ToList();
+    }
+
+    /// <summary>
+    /// Carrega todos os tipos disponíveis do JSON para o dropdown de filtro
+    /// </summary>
+    private void LoadAvailableTypes()
+    {
+        availableTypes.Clear();
+        availableTypes.Add("All Types");
+
+        // Tipos REAIS extraídos do JSON (38 tipos únicos)
+        var typesFromJson = new List<string>
+    {
+        "Achievement Certificates",
+        "Achievements",
+        "Airship Ventures",
+        "Allied Societies",
+        "Bozja",
+        "Campaigns",
+        "Chaotic Alliance Raid",
+        "Cosmic Exploration",
+        "Crafting",
+        "Custom Deliveries",
+        "Dungeons",
+        "Eureka",
+        "Eureka Orthos",
+        "FATE",
+        "Faux Hollows",
+        "Gathering",
+        "Gil",
+        "Gold Saucer",
+        "Heaven-on-High",
+        "Ishgardian Restoration",
+        "Island Sanctuary",
+        "Limited",
+        "Main Scenario",
+        "Occult Crescent",
+        "Palace of the Dead",
+        "Pilgrim's Traverse",
+        "Premium",
+        "PvP",
+        "PvP (Ranked)",
+        "Quests",
+        "Raids",
+        "Seasonal Event",
+        "Shared FATEs",
+        "The Hunt",
+        "Treasure Hunt",
+        "Trials",
+        "Unknown",
+        "V&C Dungeons",
+        "Wondrous Tails"
+    };
+
+        availableTypes.AddRange(typesFromJson);
     }
 
     private void LoadUnlockedMounts()
