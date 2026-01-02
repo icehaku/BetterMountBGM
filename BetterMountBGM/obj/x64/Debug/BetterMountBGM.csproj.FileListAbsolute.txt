@@ -1,0 +1,15 @@
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\bin\x64\Debug\goat.png
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\bin\x64\Debug\BetterMountBGM.deps.json
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\bin\x64\Debug\BetterMountBGM.dll
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\obj\x64\Debug\BetterMountBGM.csproj.AssemblyReference.cache
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\obj\x64\Debug\BetterMountBGM.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\obj\x64\Debug\BetterMountBGM.AssemblyInfoInputs.cache
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\obj\x64\Debug\BetterMountBGM.AssemblyInfo.cs
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\obj\x64\Debug\BetterMountBGM.csproj.CoreCompileInputs.cache
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\obj\x64\Debug\BetterMountBGM.sourcelink.json
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\obj\x64\Debug\BetterMountBGM.dll
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\bin\x64\Debug\external_data\mount_sources_complete.json
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\bin\x64\Debug\images\market_board_icon.png
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\bin\x64\Debug\images\mogstation_icon.png
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\bin\x64\Debug\images\locked_icon.png
+C:\Users\elano\OneDrive\Documentos\Code\XIV\BetterMountBGM\BetterMountBGM\bin\x64\Debug\images\seat_icon.png

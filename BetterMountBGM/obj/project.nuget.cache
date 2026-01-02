@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "iOVFX4bqNqY=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\elano\\OneDrive\\Documentos\\Code\\XIV\\BetterMountBGM\\BetterMountBGM\\BetterMountBGM.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\elano\\.nuget\\packages\\dalamudpackager\\14.0.1\\dalamudpackager.14.0.1.nupkg.sha512",
+    "C:\\Users\\elano\\.nuget\\packages\\dotnet.reproduciblebuilds\\1.2.39\\dotnet.reproduciblebuilds.1.2.39.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,89 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\elano\\OneDrive\\Documentos\\Code\\XIV\\BetterMountBGM\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{13C812E9-0D42-4B95-8646-40EEBF30636F}|BetterMountBGM\\BetterMountBGM.csproj|c:\\users\\elano\\onedrive\\documentos\\code\\xiv\\bettermountbgm\\bettermountbgm\\windows\\mainwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13C812E9-0D42-4B95-8646-40EEBF30636F}|BetterMountBGM\\BetterMountBGM.csproj|solutionrelative:bettermountbgm\\windows\\mainwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13C812E9-0D42-4B95-8646-40EEBF30636F}|BetterMountBGM\\BetterMountBGM.csproj|c:\\users\\elano\\onedrive\\documentos\\code\\xiv\\bettermountbgm\\bettermountbgm\\windows\\configwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13C812E9-0D42-4B95-8646-40EEBF30636F}|BetterMountBGM\\BetterMountBGM.csproj|solutionrelative:bettermountbgm\\windows\\configwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13C812E9-0D42-4B95-8646-40EEBF30636F}|BetterMountBGM\\BetterMountBGM.csproj|c:\\users\\elano\\onedrive\\documentos\\code\\xiv\\bettermountbgm\\bettermountbgm\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13C812E9-0D42-4B95-8646-40EEBF30636F}|BetterMountBGM\\BetterMountBGM.csproj|solutionrelative:bettermountbgm\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13C812E9-0D42-4B95-8646-40EEBF30636F}|BetterMountBGM\\BetterMountBGM.csproj|c:\\users\\elano\\onedrive\\documentos\\code\\xiv\\bettermountbgm\\bettermountbgm\\mountsourcehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13C812E9-0D42-4B95-8646-40EEBF30636F}|BetterMountBGM\\BetterMountBGM.csproj|solutionrelative:bettermountbgm\\mountsourcehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Plugin.cs",
+              "DocumentMoniker": "C:\\Users\\elano\\OneDrive\\Documentos\\Code\\XIV\\BetterMountBGM\\BetterMountBGM\\Plugin.cs",
+              "RelativeDocumentMoniker": "BetterMountBGM\\Plugin.cs",
+              "ToolTip": "C:\\Users\\elano\\OneDrive\\Documentos\\Code\\XIV\\BetterMountBGM\\BetterMountBGM\\Plugin.cs",
+              "RelativeToolTip": "BetterMountBGM\\Plugin.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAADgvygAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-02T11:54:53.995Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MountSourceHelper.cs",
+              "DocumentMoniker": "C:\\Users\\elano\\OneDrive\\Documentos\\Code\\XIV\\BetterMountBGM\\BetterMountBGM\\MountSourceHelper.cs",
+              "RelativeDocumentMoniker": "BetterMountBGM\\MountSourceHelper.cs",
+              "ToolTip": "C:\\Users\\elano\\OneDrive\\Documentos\\Code\\XIV\\BetterMountBGM\\BetterMountBGM\\MountSourceHelper.cs",
+              "RelativeToolTip": "BetterMountBGM\\MountSourceHelper.cs",
+              "ViewState": "AgIAAJwAAAAAAAAAAAAMwKoAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-02T12:04:20.215Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.cs",
+              "DocumentMoniker": "C:\\Users\\elano\\OneDrive\\Documentos\\Code\\XIV\\BetterMountBGM\\BetterMountBGM\\Windows\\MainWindow.cs",
+              "RelativeDocumentMoniker": "BetterMountBGM\\Windows\\MainWindow.cs",
+              "ToolTip": "C:\\Users\\elano\\OneDrive\\Documentos\\Code\\XIV\\BetterMountBGM\\BetterMountBGM\\Windows\\MainWindow.cs",
+              "RelativeToolTip": "BetterMountBGM\\Windows\\MainWindow.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAswBcAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-02T11:55:06.39Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ConfigWindow.cs",
+              "DocumentMoniker": "C:\\Users\\elano\\OneDrive\\Documentos\\Code\\XIV\\BetterMountBGM\\BetterMountBGM\\Windows\\ConfigWindow.cs",
+              "RelativeDocumentMoniker": "BetterMountBGM\\Windows\\ConfigWindow.cs",
+              "ToolTip": "C:\\Users\\elano\\OneDrive\\Documentos\\Code\\XIV\\BetterMountBGM\\BetterMountBGM\\Windows\\ConfigWindow.cs",
+              "RelativeToolTip": "BetterMountBGM\\Windows\\ConfigWindow.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcBAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-02T11:54:58.585Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

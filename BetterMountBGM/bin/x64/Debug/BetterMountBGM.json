@@ -1,0 +1,20 @@
+{
+  "Author": "Ice Haku",
+  "Name": "BetterMountBGM",
+  "InternalName": "BetterMountBGM",
+  "AssemblyVersion": "0.0.0.3",
+  "Description": "BetterMountBGM Description",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "sample",
+    "plugin",
+    "goats"
+  ],
+  "DalamudApiLevel": 14,
+  "LoadRequiredState": 0,
+  "LoadSync": false,
+  "CanUnloadAsync": false,
+  "LoadPriority": 0,
+  "Punchline": "version 0.1",
+  "AcceptsFeedback": true
+}
