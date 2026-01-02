@@ -24,7 +24,7 @@ public class ConfigWindow : Window, IDisposable
     private string searchFilter = string.Empty;
     private SortColumn currentSortColumn = SortColumn.Name;
     private bool sortDescending = false;
-    private bool showLockedMounts = false;
+    private bool showLockedMounts = true;
     private bool showMissingData = false;
 
     // NOVO: Filtro por Type
@@ -42,7 +42,7 @@ public class ConfigWindow : Window, IDisposable
         Type  // NOVO: Ordenação por Type
     }
 
-    public ConfigWindow(Plugin plugin) : base("Mount Music Configuration###MountMusicConfig")
+    public ConfigWindow(Plugin plugin) : base("Better Mount BGM###MountMusicConfig")
     {
         this.plugin = plugin;
         configuration = plugin.Configuration;
@@ -50,7 +50,7 @@ public class ConfigWindow : Window, IDisposable
         Size = new Vector2(1100, 600);  // Aumentado para acomodar nova coluna
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(900, 400),
+            MinimumSize = new Vector2(1400, 400),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
 
@@ -87,7 +87,7 @@ public class ConfigWindow : Window, IDisposable
         // CABEÇALHO E CONTROLES
         // ═══════════════════════════════════════════════════════════════
 
-        ImGui.TextColored(new Vector4(0.3f, 0.8f, 1f, 1f), "Mount Music Customization");
+        ImGui.TextColored(new Vector4(0.3f, 0.8f, 1f, 1f), "Mount BGM Customization");
         ImGui.SameLine();
         ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1),
             $"  |  Mounts Unlocked: {unlockedMounts.Count} / 337");
@@ -134,10 +134,10 @@ public class ConfigWindow : Window, IDisposable
             ImGui.EndCombo();
         }
 
-        ImGui.SameLine();
-
-        // NOVO: Dropdown de filtro por Type
-        ImGui.Text("Filter Type:");
+        ImGui.Separator();
+        ImGui.Spacing();
+        ImGui.TextColored(new Vector4(0.3f, 0.8f, 1f, 1f), "Filters");
+        ImGui.Text("Type:");
         ImGui.SameLine();
         ImGui.SetNextItemWidth(150);
         if (ImGui.BeginCombo("##filtertype", selectedTypeFilter))
@@ -152,11 +152,6 @@ public class ConfigWindow : Window, IDisposable
             ImGui.EndCombo();
         }
 
-        ImGui.SameLine();
-        if (ImGui.Button("Reload Mounts"))
-        {
-            LoadUnlockedMounts();
-        }
         if (ImGui.IsItemHovered())
         {
             ImGui.BeginTooltip();
@@ -178,9 +173,13 @@ public class ConfigWindow : Window, IDisposable
         ImGui.SameLine();
         ImGui.Checkbox("Show Missing Data", ref showMissingData);
 
+        ImGui.TextColored(new Vector4(0.3f, 0.8f, 1f, 1f), "Legends");
+
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
+
+        
 
         // ═══════════════════════════════════════════════════════════════
         // TABELA DE MONTARIAS (6 colunas: NOVA coluna Type)
@@ -194,15 +193,14 @@ public class ConfigWindow : Window, IDisposable
             ImGuiTableFlags.ScrollY |
             ImGuiTableFlags.Resizable;
 
-        if (ImGui.BeginTable("MountsTable", 6, tableFlags, new Vector2(0, -30)))  // 6 colunas agora
+        if (ImGui.BeginTable("MountsTable", 5, tableFlags, new Vector2(0, -30)))  // 6 colunas agora
         {
             // Setup de colunas
             ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthFixed, 50);
             ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed, 200);
-            ImGui.TableSetupColumn("Unlocked", ImGuiTableColumnFlags.WidthFixed, 80);
-            ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 150);  // NOVA coluna
+            ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 300);  // NOVA coluna
             ImGui.TableSetupColumn("Acquired By", ImGuiTableColumnFlags.WidthStretch);
-            ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthFixed, 100);
+            ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthFixed, 10);
             ImGui.TableHeadersRow();  // NOVO: Headers visíveis
 
             // Renderiza cada montaria
@@ -214,30 +212,30 @@ public class ConfigWindow : Window, IDisposable
                 bool hasMissingData = MountSourceHelper.GetMountSourceInfo(mount.Name) == null;
                 var mountInfo = MountSourceHelper.GetMountSourceInfo(mount.Name);
 
-                // Coluna 1: Ícone
+                // Coluna: Ícone
                 ImGui.TableSetColumnIndex(0);
                 RenderMountIcon(mount);
 
-                // Coluna 2: Nome
+                // Coluna: Nome
                 ImGui.TableSetColumnIndex(1);
                 ImGui.AlignTextToFramePadding();
                 ImGui.Text(mount.Name);
                 //ImGui.Text($"{mount.Name} (ID: {mount.MountId})");
 
-                // Coluna 3: Status (Unlocked/Locked)
-                ImGui.TableSetColumnIndex(2);
-                ImGui.AlignTextToFramePadding();
-                if (mount.IsUnlocked)
-                {
-                    ImGui.TextColored(new Vector4(0.2f, 1f, 0.2f, 1), "Unlocked");
-                }
-                else
-                {
-                    ImGui.TextColored(new Vector4(1f, 0.3f, 0.3f, 1), "Locked");
-                }
+                // Coluna: Status (Unlocked/Locked)
+                //ImGui.TableSetColumnIndex(2);
+                //ImGui.AlignTextToFramePadding();
+                //if (mount.IsUnlocked)
+                //{
+                //    ImGui.TextColored(new Vector4(0.2f, 1f, 0.2f, 1), "Unlocked");
+                //}
+                //else
+                //{
+                //    ImGui.TextColored(new Vector4(1f, 0.3f, 0.3f, 1), "Locked");
+                //}
 
-                // Coluna 4: Type (NOVA)
-                ImGui.TableSetColumnIndex(3);
+                // Coluna: Type
+                ImGui.TableSetColumnIndex(2);
                 ImGui.AlignTextToFramePadding();
                 if (hasMissingData || mountInfo == null)
                 {
@@ -250,8 +248,8 @@ public class ConfigWindow : Window, IDisposable
                     ImGui.TextColored(typeColor, mountInfo.Type);
                 }
 
-                // Coluna 5: Acquired By
-                ImGui.TableSetColumnIndex(4);
+                // Coluna: Acquired By
+                ImGui.TableSetColumnIndex(3);
                 ImGui.AlignTextToFramePadding();
 
                 if (hasMissingData)
@@ -264,8 +262,8 @@ public class ConfigWindow : Window, IDisposable
                     ImGui.TextWrapped(acquiredBy);
                 }
 
-                // Coluna 6: Custom BGM (input field)
-                ImGui.TableSetColumnIndex(5);
+                // Coluna: Custom BGM (input field)
+                ImGui.TableSetColumnIndex(4);
                 RenderCustomBGMInput(mount);
             }
 
@@ -281,7 +279,7 @@ public class ConfigWindow : Window, IDisposable
 
         var filteredCount = filteredMounts.Count;
         ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1),
-            $"💡 Tip: Leave 'Custom BGM' empty to use default mount music  |  Showing: {filteredCount} mounts  |  Configured: {configuration.MountMusicOverrides.Count}");
+            $"💡 Tip: Leave 'Custom BGM' empty to use default mount music  | Musics Changed: {configuration.MountMusicOverrides.Count}");
     }
 
     /// <summary>
@@ -365,16 +363,31 @@ public class ConfigWindow : Window, IDisposable
 
     private void RenderMountIcon(MountInfo mount)
     {
-        // Tenta carregar o ícone da montaria
         var icon = Plugin.TextureProvider.GetFromGameIcon((uint)mount.Icon).GetWrapOrDefault();
 
         if (icon != null)
         {
+            // Definir cor da borda baseada no unlock status
+            var borderColor = mount.IsUnlocked
+                ? new Vector4(0.2f, 1f, 0.2f, 1)   // Verde para unlocked
+                : new Vector4(1f, 0.3f, 0.3f, 1);  // Vermelho para locked
+
+            var cursorPos = ImGui.GetCursorScreenPos();
             ImGui.Image(icon.Handle, new Vector2(40, 40));
+
+            // Desenhar borda
+            var drawList = ImGui.GetWindowDrawList();
+            drawList.AddRect(
+                cursorPos,
+                new Vector2(cursorPos.X + 40, cursorPos.Y + 40),
+                ImGui.GetColorU32(borderColor),
+                0f,
+                ImDrawFlags.None,
+                2f  // Espessura da borda
+            );
         }
         else
         {
-            // Fallback: quadrado vazio se não carregar
             ImGui.Dummy(new Vector2(40, 40));
         }
     }
