@@ -25,6 +25,7 @@ public class ConfigWindow : Window, IDisposable
     private SortColumn currentSortColumn = SortColumn.Name;
     private bool sortDescending = false;
     private bool showLockedMounts = false;
+    private bool showMissingData = false;  // NOVO: filtro para missing data
 
     // Dicionário temporário para edição de BGM IDs
     private Dictionary<uint, string> bgmInputs = new();
@@ -41,7 +42,7 @@ public class ConfigWindow : Window, IDisposable
         this.plugin = plugin;
         configuration = plugin.Configuration;
 
-        Size = new Vector2(1000, 600);  // Aumentado um pouco para caber a nova coluna
+        Size = new Vector2(1000, 600);
         SizeConstraints = new WindowSizeConstraints
         {
             MinimumSize = new Vector2(800, 400),
@@ -136,15 +137,17 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Spacing();
 
-        // Checkbox para mostrar montarias travadas
+        // Checkboxes de filtro
         ImGui.Checkbox("Show Locked Mounts", ref showLockedMounts);
+        ImGui.SameLine();
+        ImGui.Checkbox("Show Missing Data", ref showMissingData);  // NOVO
 
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
 
         // ═══════════════════════════════════════════════════════════════
-        // TABELA DE MONTARIAS - ATUALIZADA COM NOVA COLUNA
+        // TABELA DE MONTARIAS (5 colunas, SEM coluna Missing Data)
         // ═══════════════════════════════════════════════════════════════
 
         var filteredMounts = GetFilteredAndSortedMounts();
@@ -155,20 +158,22 @@ public class ConfigWindow : Window, IDisposable
             ImGuiTableFlags.ScrollY |
             ImGuiTableFlags.Resizable;
 
-        // NOVA ESTRUTURA: 5 colunas (adicionamos "Acquired By")
         if (ImGui.BeginTable("MountsTable", 5, tableFlags, new Vector2(0, -30)))
         {
             // Setup de colunas
             ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthFixed, 50);
             ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed, 200);
             ImGui.TableSetupColumn("Unlocked", ImGuiTableColumnFlags.WidthFixed, 80);
-            ImGui.TableSetupColumn("Acquired By", ImGuiTableColumnFlags.WidthStretch);  // NOVA COLUNA
+            ImGui.TableSetupColumn("Acquired By", ImGuiTableColumnFlags.WidthStretch);
             ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthFixed, 100);
 
             // Renderiza cada montaria
             foreach (var mount in filteredMounts)
             {
                 ImGui.TableNextRow();
+
+                // Verifica se tem dados no JSON
+                bool hasMissingData = MountSourceHelper.GetMountSourceInfo(mount.Name) == null;
 
                 // Coluna 1: Ícone
                 ImGui.TableSetColumnIndex(0);
@@ -191,20 +196,18 @@ public class ConfigWindow : Window, IDisposable
                     ImGui.TextColored(new Vector4(1f, 0.3f, 0.3f, 1), "Locked");
                 }
 
-                // Coluna 4: Acquired By (NOVA!)
+                // Coluna 4: Acquired By
                 ImGui.TableSetColumnIndex(3);
                 ImGui.AlignTextToFramePadding();
 
-                var acquiredBy = MountSourceHelper.GetAcquiredBy(mount.Name);
-
-                // Cor diferente para "Unknown"
-                if (acquiredBy == "Unknown")
+                if (hasMissingData)
                 {
-                    ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1), acquiredBy);
+                    ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1), "Unknown");
                 }
                 else
                 {
-                    ImGui.TextWrapped(acquiredBy);  // Usa TextWrapped para textos longos
+                    var acquiredBy = MountSourceHelper.GetAcquiredBy(mount.Name);
+                    ImGui.TextWrapped(acquiredBy);
                 }
 
                 // Coluna 5: Custom BGM (input field)
@@ -288,6 +291,13 @@ public class ConfigWindow : Window, IDisposable
 
         var filtered = sourceList.AsEnumerable();
 
+        // FILTRO: Show Missing Data
+        if (showMissingData)
+        {
+            filtered = filtered.Where(m => MountSourceHelper.GetMountSourceInfo(m.Name) == null);
+        }
+
+        // Filtro por busca
         if (!string.IsNullOrWhiteSpace(searchFilter))
         {
             filtered = filtered.Where(m =>
@@ -295,6 +305,7 @@ public class ConfigWindow : Window, IDisposable
                 m.MountId.ToString().Contains(searchFilter));
         }
 
+        // Ordenação
         filtered = currentSortColumn switch
         {
             SortColumn.Name => sortDescending
