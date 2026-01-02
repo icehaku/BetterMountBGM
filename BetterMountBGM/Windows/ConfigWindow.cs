@@ -17,14 +17,14 @@ public class ConfigWindow : Window, IDisposable
 
     // Cache de montarias
     private List<MountInfo>? unlockedMounts = null;
-    private List<MountInfo>? allMounts = null; // Cache de TODAS as montarias
+    private List<MountInfo>? allMounts = null;
     private bool mountsLoaded = false;
 
     // Filtros e ordenação
     private string searchFilter = string.Empty;
     private SortColumn currentSortColumn = SortColumn.Name;
     private bool sortDescending = false;
-    private bool showLockedMounts = false; // Mostrar montarias travadas
+    private bool showLockedMounts = false;
 
     // Dicionário temporário para edição de BGM IDs
     private Dictionary<uint, string> bgmInputs = new();
@@ -41,19 +41,21 @@ public class ConfigWindow : Window, IDisposable
         this.plugin = plugin;
         configuration = plugin.Configuration;
 
-        Size = new Vector2(900, 600);
+        Size = new Vector2(1000, 600);  // Aumentado um pouco para caber a nova coluna
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(700, 400),
+            MinimumSize = new Vector2(800, 400),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
+
+        // Carregar database de informações da wiki
+        MountSourceHelper.LoadDatabase(Plugin.PluginInterface);
     }
 
     public void Dispose() { }
 
     public override void PreDraw()
     {
-        // Carrega montarias quando a janela abre
         if (!mountsLoaded)
         {
             LoadUnlockedMounts();
@@ -142,7 +144,7 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Spacing();
 
         // ═══════════════════════════════════════════════════════════════
-        // TABELA DE MONTARIAS
+        // TABELA DE MONTARIAS - ATUALIZADA COM NOVA COLUNA
         // ═══════════════════════════════════════════════════════════════
 
         var filteredMounts = GetFilteredAndSortedMounts();
@@ -153,13 +155,15 @@ public class ConfigWindow : Window, IDisposable
             ImGuiTableFlags.ScrollY |
             ImGuiTableFlags.Resizable;
 
-        if (ImGui.BeginTable("MountsTable", 4, tableFlags, new Vector2(0, -30)))
+        // NOVA ESTRUTURA: 5 colunas (adicionamos "Acquired By")
+        if (ImGui.BeginTable("MountsTable", 5, tableFlags, new Vector2(0, -30)))
         {
-            // Setup de colunas (sem headers visíveis, mas com tamanhos)
+            // Setup de colunas
             ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthFixed, 50);
             ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed, 200);
             ImGui.TableSetupColumn("Unlocked", ImGuiTableColumnFlags.WidthFixed, 80);
-            ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthStretch);
+            ImGui.TableSetupColumn("Acquired By", ImGuiTableColumnFlags.WidthStretch);  // NOVA COLUNA
+            ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthFixed, 100);
 
             // Renderiza cada montaria
             foreach (var mount in filteredMounts)
@@ -187,8 +191,24 @@ public class ConfigWindow : Window, IDisposable
                     ImGui.TextColored(new Vector4(1f, 0.3f, 0.3f, 1), "Locked");
                 }
 
-                // Coluna 4: Custom BGM (input field)
+                // Coluna 4: Acquired By (NOVA!)
                 ImGui.TableSetColumnIndex(3);
+                ImGui.AlignTextToFramePadding();
+
+                var acquiredBy = MountSourceHelper.GetAcquiredBy(mount.Name);
+
+                // Cor diferente para "Unknown"
+                if (acquiredBy == "Unknown")
+                {
+                    ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1), acquiredBy);
+                }
+                else
+                {
+                    ImGui.TextWrapped(acquiredBy);  // Usa TextWrapped para textos longos
+                }
+
+                // Coluna 5: Custom BGM (input field)
+                ImGui.TableSetColumnIndex(4);
                 RenderCustomBGMInput(mount);
             }
 
@@ -223,7 +243,6 @@ public class ConfigWindow : Window, IDisposable
 
     private void RenderCustomBGMInput(MountInfo mount)
     {
-        // Inicializa o input se não existir
         if (!bgmInputs.ContainsKey(mount.MountId))
         {
             if (configuration.MountMusicOverrides.TryGetValue(mount.MountId, out var bgmId))
@@ -236,19 +255,16 @@ public class ConfigWindow : Window, IDisposable
             }
         }
 
-        // Campo de input
         string currentInput = bgmInputs[mount.MountId];
-        ImGui.SetNextItemWidth(-1); // Preenche toda a largura disponível
+        ImGui.SetNextItemWidth(-1);
 
         if (ImGui.InputTextWithHint($"##bgm_{mount.MountId}", "Custom BGM ID...",
             ref currentInput, 10, ImGuiInputTextFlags.CharsDecimal))
         {
             bgmInputs[mount.MountId] = currentInput;
 
-            // Processa a mudança
             if (string.IsNullOrWhiteSpace(currentInput))
             {
-                // Remove override se campo estiver vazio
                 if (configuration.MountMusicOverrides.ContainsKey(mount.MountId))
                 {
                     configuration.MountMusicOverrides.Remove(mount.MountId);
@@ -258,7 +274,6 @@ public class ConfigWindow : Window, IDisposable
             }
             else if (ushort.TryParse(currentInput, out ushort bgmId) && bgmId > 0)
             {
-                // Adiciona/atualiza override
                 configuration.MountMusicOverrides[mount.MountId] = bgmId;
                 configuration.Save();
                 Plugin.Log.Information($"Set {mount.Name} → BGM {bgmId}");
@@ -268,11 +283,9 @@ public class ConfigWindow : Window, IDisposable
 
     private List<MountInfo> GetFilteredAndSortedMounts()
     {
-        // Escolhe qual lista usar baseado no checkbox
         var sourceList = showLockedMounts ? allMounts : unlockedMounts;
         if (sourceList == null) return new List<MountInfo>();
 
-        // Filtra por busca
         var filtered = sourceList.AsEnumerable();
 
         if (!string.IsNullOrWhiteSpace(searchFilter))
@@ -282,7 +295,6 @@ public class ConfigWindow : Window, IDisposable
                 m.MountId.ToString().Contains(searchFilter));
         }
 
-        // Ordena
         filtered = currentSortColumn switch
         {
             SortColumn.Name => sortDescending
@@ -294,8 +306,8 @@ public class ConfigWindow : Window, IDisposable
                 : filtered.OrderBy(m => m.MountId),
 
             SortColumn.Unlocked => showLockedMounts
-                ? filtered.OrderByDescending(m => m.IsUnlocked).ThenBy(m => m.Name) // Unlocked primeiro
-                : filtered.OrderBy(m => m.Name), // Todos unlocked, ordena por nome
+                ? filtered.OrderByDescending(m => m.IsUnlocked).ThenBy(m => m.Name)
+                : filtered.OrderBy(m => m.Name),
 
             _ => filtered.OrderBy(m => m.Name)
         };
@@ -308,9 +320,9 @@ public class ConfigWindow : Window, IDisposable
         try
         {
             unlockedMounts = MountHelper.GetUnlockedMounts(Plugin.DataManager);
-            allMounts = MountHelper.GetAllMounts(Plugin.DataManager); // Carrega todas também
+            allMounts = MountHelper.GetAllMounts(Plugin.DataManager);
             mountsLoaded = true;
-            bgmInputs.Clear(); // Limpa cache de inputs
+            bgmInputs.Clear();
             Plugin.Log.Information($"Loaded {unlockedMounts.Count} unlocked mounts and {allMounts.Count} total mounts");
         }
         catch (Exception ex)

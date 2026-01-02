@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BetterMountBGM")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.0.0.3")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.0.0.3+e371e24205f3338e72ad780e4819e43a59177953")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.0.0.3+7adb131c542172cfb9cdbb717852cf5a39e1ded8")]
 [assembly: System.Reflection.AssemblyProductAttribute("BetterMountBGM")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BetterMountBGM")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.0.0.3")]
