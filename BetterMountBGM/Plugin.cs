@@ -63,8 +63,8 @@ public sealed class Plugin : IDalamudPlugin
         });
 
         PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
-        PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUi;
-        PluginInterface.UiBuilder.OpenMainUi += ToggleMainUi;
+        PluginInterface.UiBuilder.OpenConfigUi += ToggleMainUi;
+        PluginInterface.UiBuilder.OpenMainUi +=  ToggleConfigUi;
 
         Log.Information($"Plugin loaded!");
     }
@@ -101,6 +101,9 @@ public sealed class Plugin : IDalamudPlugin
                 if (currentMountId > 0 && lastMountId == 0)
                 {
                     // Acabou de montar
+                    var mountInfo = MountHelper.GetMountInfo(DataManager, currentMountId);
+                    if(mountInfo != null)
+                    Log.Information($"Player mounted: {mountInfo.Name} (Mount ID: {mountInfo.MountId}, RideBGM ID: {mountInfo.RideBGM})");
                     OnPlayerMounted(currentMountId);
                 }
                 else if (currentMountId == 0 && lastMountId > 0)

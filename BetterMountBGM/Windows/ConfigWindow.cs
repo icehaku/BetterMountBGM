@@ -18,6 +18,15 @@ public class ConfigWindow : Window, IDisposable
 {
     private readonly Configuration configuration;
     private readonly Plugin plugin;
+    private readonly uint[] defaultBGMs = {
+        0, 
+        62,  // Eorzea de Chobo - shared by different chocobo mounts
+        121, // The Rider's Boon - shared mount bgm
+        193, // Big-Boned - shared comical mount bgm (fat chocobo)
+        319, // Borderless - shared bgm
+        638, // The Merry Wanderes Waltz - shared by different mogstation mounts
+        895  // Roads Less Traveled - shared mount bgm
+    };
 
     // xxx
     private readonly string mogImagePath;
@@ -47,6 +56,10 @@ public class ConfigWindow : Window, IDisposable
 
     // Dicionário temporário para edição de BGM IDs
     private Dictionary<uint, string> bgmInputs = new();
+
+    // BGM Input
+    private List<BGMInfo> bgmList = new();
+    private string bgmSearchFilter = string.Empty;
 
     private enum SortColumn
     {
@@ -80,6 +93,7 @@ public class ConfigWindow : Window, IDisposable
 
         // Carregar tipos disponíveis
         LoadAvailableTypes();
+        LoadBGMDatabase();
     }
 
     public void Dispose() { }
@@ -133,9 +147,14 @@ public class ConfigWindow : Window, IDisposable
         {
             // Filtro é aplicado ao renderizar a tabela
         }
-
         ImGui.SameLine();
-
+        ImGui.PushFont(UiBuilder.IconFont);
+        if (ImGui.Button($"{FontAwesomeIcon.Eraser.ToIconString()}##clearmount"))
+        {
+            searchFilter = String.Empty;
+        }
+        ImGui.PopFont();
+        ImGui.SameLine();
         // Dropdown de ordenação
         ImGui.Text("Sort by:");
         ImGui.SameLine();
@@ -228,11 +247,10 @@ public class ConfigWindow : Window, IDisposable
         {
             typeComboJustOpened = false;
         }
-
         
         ImGui.SameLine();
         ImGui.PushFont(UiBuilder.IconFont);
-        if (ImGui.Button(FontAwesomeIcon.Eraser.ToIconString()))
+        if (ImGui.Button($"{FontAwesomeIcon.Undo.ToIconString()}##cleartype"))
         {
             selectedTypeFilter = "All Types";
         }
@@ -265,6 +283,9 @@ public class ConfigWindow : Window, IDisposable
             ImGui.SameLine();
             ImGui.Image(boardImage.Handle, new Vector2(50, 50));
             ImGui.SameLine();
+            var cursorPos = ImGui.GetCursorPos();
+            cursorPos.Y += 15;
+            ImGui.SetCursorPos(cursorPos);
             ImGui.Text(" - Market Board Purchasable");
         }
 
@@ -273,6 +294,9 @@ public class ConfigWindow : Window, IDisposable
             ImGui.SameLine();
             ImGui.Image(musicImage.Handle, new Vector2(50, 50));
             ImGui.SameLine();
+            var cursorPos = ImGui.GetCursorPos();
+            cursorPos.Y += 15;
+            ImGui.SetCursorPos(cursorPos);
             ImGui.Text(" - Has Unique Music");
         }
 
@@ -301,7 +325,7 @@ public class ConfigWindow : Window, IDisposable
             ImGui.TableSetupColumn("Info", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize, 166);
             ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize, 50);
             ImGui.TableSetupColumn("Acquired By", ImGuiTableColumnFlags.WidthStretch);  // Pega o resto
-            ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize, 120);
+            ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize, 250);
             ImGui.TableHeadersRow();
 
             // Renderiza cada montaria
@@ -363,7 +387,7 @@ public class ConfigWindow : Window, IDisposable
                 // Ícone Music (tem BGM customizado configurado?)
                 if (musicImage != null)
                 {
-                    var hasUniqueMusic = mount.RideBGM != 638 && mount.RideBGM != 319 && mount.RideBGM != 895 && mount.RideBGM != 0;
+                    var hasUniqueMusic = !defaultBGMs.Contains(mount.RideBGM);
 
                     var tintMusic = hasUniqueMusic
                         ? new Vector4(1f, 1f, 1f, 1f)      // Claro
@@ -597,41 +621,80 @@ public class ConfigWindow : Window, IDisposable
 
     private void RenderCustomBGMInput(MountInfo mount)
     {
-        if (!bgmInputs.ContainsKey(mount.MountId))
-        {
-            if (configuration.MountMusicOverrides.TryGetValue(mount.MountId, out var bgmId))
-            {
-                bgmInputs[mount.MountId] = bgmId.ToString();
-            }
-            else
-            {
-                bgmInputs[mount.MountId] = string.Empty;
-            }
-        }
+        ushort currentBGM = 0;
+        configuration.MountMusicOverrides.TryGetValue(mount.MountId, out currentBGM);
 
-        string currentInput = bgmInputs[mount.MountId];
+        var selectedBGM = bgmList.FirstOrDefault(b => b.ID == currentBGM);
+        var displayText = selectedBGM != null ? $"{selectedBGM.ID} - {selectedBGM.Title}" : "Select BGM...";
+
         ImGui.SetNextItemWidth(-1);
-
-        if (ImGui.InputTextWithHint($"##bgm_{mount.MountId}", "Custom BGM ID...",
-            ref currentInput, 10, ImGuiInputTextFlags.CharsDecimal))
+        if (ImGui.BeginCombo($"##bgm_{mount.MountId}", displayText))
         {
-            bgmInputs[mount.MountId] = currentInput;
+            ImGui.InputTextWithHint("##bgmsearch", "Search BGM by Name/ID/Location...", ref bgmSearchFilter, 50);
+            ImGui.SameLine();
 
-            if (string.IsNullOrWhiteSpace(currentInput))
+            ImGui.PushFont(UiBuilder.IconFont);
+            ImGui.Text(FontAwesomeIcon.InfoCircle.ToIconString());
+            ImGui.PopFont();
+            if (ImGui.IsItemHovered())
             {
-                if (configuration.MountMusicOverrides.ContainsKey(mount.MountId))
+                ImGui.BeginTooltip();
+                ImGui.Text("The musics Ingame does not have the proper name.");
+                ImGui.Text("The information you see here is a community datamine effort, so it won't be 100% acurate.");
+                ImGui.Text("You also won't find EVERY music.");
+                ImGui.EndTooltip();
+            }
+
+            ImGui.Separator();
+
+            var filtered = bgmList.AsEnumerable();
+            if (!string.IsNullOrWhiteSpace(bgmSearchFilter))
+            {
+                filtered = filtered.Where(b =>
+                    b.Title.Contains(bgmSearchFilter, StringComparison.OrdinalIgnoreCase) ||
+                    b.Locations.Contains(bgmSearchFilter, StringComparison.OrdinalIgnoreCase) ||
+                    b.ID.ToString().Contains(bgmSearchFilter));
+            }
+
+            foreach (var bgm in filtered)
+            {
+                var displayName = bgm.Title.Length > 50
+                    ? bgm.Title.Substring(0, 50) + "..."
+                    : bgm.Title;
+
+                if (ImGui.Selectable($"{bgm.ID} - {displayName}"))
                 {
-                    configuration.MountMusicOverrides.Remove(mount.MountId);
+                    configuration.MountMusicOverrides[mount.MountId] = bgm.ID;
                     configuration.Save();
-                    Plugin.Log.Information($"Removed custom BGM for {mount.Name}");
+                    bgmSearchFilter = string.Empty;
+                }
+
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.BeginTooltip();
+                    ImGui.Text($"Title: {bgm.Title}");
+                    if (!string.IsNullOrEmpty(bgm.AltTitle))
+                        ImGui.Text($"Alt Title: {bgm.AltTitle}");
+                    if (!string.IsNullOrEmpty(bgm.Locations))
+                        ImGui.Text($"Location: {bgm.Locations}");
+                    ImGui.EndTooltip();
                 }
             }
-            else if (ushort.TryParse(currentInput, out ushort bgmId) && bgmId > 0)
+            ImGui.EndCombo();
+        }
+
+        // Show selected BGM name below
+        if (selectedBGM != null)
+        {
+            ImGui.TextColored(new Vector4(0.6f, 0.8f, 1f, 1f), selectedBGM.Title);
+            ImGui.SameLine();
+            ImGui.PushFont(UiBuilder.IconFont);
+            if (ImGui.Button($"{FontAwesomeIcon.Trash.ToIconString()}##remove_{mount.MountId}"))
             {
-                configuration.MountMusicOverrides[mount.MountId] = bgmId;
+                configuration.MountMusicOverrides.Remove(mount.MountId);
                 configuration.Save();
-                Plugin.Log.Information($"Set {mount.Name} → BGM {bgmId}");
             }
+            ImGui.PopFont();
         }
     }
 
@@ -778,4 +841,58 @@ public class ConfigWindow : Window, IDisposable
         return string.Join(" ", words.Select(w =>
             char.ToUpper(w[0]) + w.Substring(1).ToLower()));
     }
+
+    private void LoadBGMDatabase()
+    {
+        try
+        {
+            var csvPath = Path.Combine(
+                Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!,
+                "external_data",
+                "xiv_bgm_en.csv");
+
+            if (!File.Exists(csvPath))
+            {
+                Plugin.Log.Warning($"BGM CSV not found at: {csvPath}");
+                return;
+            }
+
+            var lines = File.ReadAllLines(csvPath).Skip(1); // Skip header
+
+            foreach (var line in lines)
+            {
+                var parts = line.Split(',');
+                if (parts.Length < 6) continue;
+
+                if (ushort.TryParse(parts[0], out var id))
+                {
+                    bgmList.Add(new BGMInfo
+                    {
+                        ID = id,
+                        Title = parts[1],
+                        AltTitle = parts[2],
+                        SpecialModeTitle = parts[3],
+                        Locations = parts[4],
+                        Comments = parts[5]
+                    });
+                }
+            }
+
+            Plugin.Log.Information($"Loaded {bgmList.Count} BGM entries");
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error($"Error loading BGM database: {ex.Message}");
+        }
+    }
+}
+
+public class BGMInfo
+{
+    public ushort ID { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string AltTitle { get; set; } = string.Empty;
+    public string SpecialModeTitle { get; set; } = string.Empty;
+    public string Locations { get; set; } = string.Empty;
+    public string Comments { get; set; } = string.Empty;
 }

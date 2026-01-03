@@ -1,4 +1,5 @@
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
@@ -13,12 +14,13 @@ public class MainWindow : Window, IDisposable
 {
     private readonly string aboutImagePath;
     private readonly Plugin plugin;
+    private bool useAuthorBgmCustomization = true;
 
     // We give this window a hidden ID using ##.
     // The user will see "My Amazing Window" as window title,
     // but for ImGui the ID is "My Amazing Window##With a hidden ID"
     public MainWindow(Plugin plugin)
-        : base("My Amazing Window##With a hidden ID", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+        : base("Settings##With a hidden ID", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
     {
         SizeConstraints = new WindowSizeConstraints
         {
@@ -34,7 +36,20 @@ public class MainWindow : Window, IDisposable
 
     public override void Draw()
     {
-        if (ImGui.Button("Show Settings"))
+        ImGui.Checkbox("Use Author BGM Customization", ref useAuthorBgmCustomization);
+        ImGui.SameLine();
+        ImGui.PushFont(UiBuilder.IconFont);
+        ImGui.Text(FontAwesomeIcon.InfoCircle.ToIconString());
+        ImGui.PopFont();
+        if (ImGui.IsItemHovered())
+        {   ImGui.SameLine();
+            ImGui.BeginTooltip();
+            ImGui.Text("This will set every mount that dosn't have a unique bgm, to a different one choosed by the plugin author!");
+            ImGui.Text("If you configure any customization it will always take priorite over this.");
+            ImGui.EndTooltip();
+        }
+
+        if (ImGui.Button("BGM Customization Menu"))
         {
             plugin.ToggleConfigUi();
         }
@@ -44,7 +59,10 @@ public class MainWindow : Window, IDisposable
         // Normally a BeginChild() would have to be followed by an unconditional EndChild(),
         // ImRaii takes care of this after the scope ends.
         // This works for all ImGui functions that require specific handling, examples are BeginTable() or Indent().
-        ImGui.Text("About me!");
+        ImGui.TextColored(new Vector4(0.3f, 0.8f, 1f, 1f), "About the plugin author:");
+        ImGui.Text("Hello, I'm Ice!");
+        ImGui.Text("I'm not really a C# dev, I only worked with WebDev(ruby/rails+JS) my entire life, so this here is just an adventure for me.");
+        ImGui.Text("Sorry for any bug, feel free to report it or ask for anything on the github issues of the plugin project.");
         var aboutImage = Plugin.TextureProvider.GetFromFile(aboutImagePath).GetWrapOrDefault();
         if (aboutImage != null)
         {

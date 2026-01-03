@@ -95,7 +95,8 @@ public static class MountHelper
             MountId = mount.RowId,
             Name = mount.Singular.ToString(),
             Icon = mount.Icon,
-            Order = mount.Order
+            Order = mount.Order,
+            RideBGM = mount.RideBGM.RowId
         };
     }
 
