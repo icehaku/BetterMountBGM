@@ -1,5 +1,6 @@
 using BetterMountBGM;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+//using ECommons.ImGuiMethods;
 
 namespace BetterMountBGM.Windows;
 
@@ -40,6 +42,8 @@ public class ConfigWindow : Window, IDisposable
     // Filtro por Type
     private string selectedTypeFilter = "All Types";
     private List<string> availableTypes = new();
+    private string typeSearchFilter = string.Empty;
+    private bool typeComboJustOpened = false;
 
     // Dicionário temporário para edição de BGM IDs
     private Dictionary<uint, string> bgmInputs = new();
@@ -166,33 +170,79 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Separator();
         ImGui.Spacing();
         ImGui.TextColored(new Vector4(0.3f, 0.8f, 1f, 1f), "Filters");
+
         ImGui.Text("Type:");
         ImGui.SameLine();
-        ImGui.SetNextItemWidth(150);
-        if (ImGui.BeginCombo("##filtertype", selectedTypeFilter))
+        ImGui.SetNextItemWidth(250);
+
+        bool comboOpen = ImGui.BeginCombo("##filtertype", selectedTypeFilter);
+
+        if (comboOpen)
         {
-            foreach (var type in availableTypes)
+            if (!typeComboJustOpened)
             {
-                if (ImGui.Selectable(type, selectedTypeFilter == type))
+                typeSearchFilter = string.Empty;
+                typeComboJustOpened = true;
+                ImGui.SetKeyboardFocusHere(0);
+            }
+
+            ImGui.InputTextWithHint("##typesearch", "🔍 Search types...", ref typeSearchFilter, 50);
+
+            ImGui.Separator();
+
+            var filteredTypes = availableTypes.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(typeSearchFilter))
+            {
+                filteredTypes = filteredTypes.Where(t =>
+                    t.Contains(typeSearchFilter, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var typesToShow = filteredTypes.ToList();
+
+            //if (!string.IsNullOrWhiteSpace(typeSearchFilter))
+            //{
+            //    ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1f),
+            //        $"Found: {typesToShow.Count} / {availableTypes.Count}");
+            //    ImGui.Separator();
+            //}
+
+            foreach (var type in typesToShow)
+            {
+                bool isSelected = selectedTypeFilter == type;
+
+                if (ImGui.Selectable(type, isSelected))
                 {
                     selectedTypeFilter = type;
+                    typeSearchFilter = string.Empty;
+                    ImGui.CloseCurrentPopup();
                 }
+
+                if (isSelected)
+                    ImGui.SetItemDefaultFocus();
             }
+
             ImGui.EndCombo();
         }
-
-        if (ImGui.IsItemHovered())
+        else
         {
-            ImGui.BeginTooltip();
-            ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0f);
-            ImGui.Text("Unlocked Mounts are reloaded every time you open the plugin.");
-            ImGui.Text("Use this button only to update if you unlocked a mount");
-            ImGui.Text("while the plugin config was open.");
-            ImGui.PopTextWrapPos();
-            ImGui.EndTooltip();
+            typeComboJustOpened = false;
         }
 
+        
+        ImGui.SameLine();
+        ImGui.PushFont(UiBuilder.IconFont);
+        if (ImGui.Button(FontAwesomeIcon.Eraser.ToIconString()))
+        {
+            selectedTypeFilter = "All Types";
+        }
+        ImGui.PopFont();
         ImGui.Spacing();
+
+        //if (ImGuiEx.IconButton(FontAwesomeIcon.Eraser))
+        //{
+        //    selectedTypeFilter = "All Types";
+        //}
 
         // ═══════════════════════════════════════════════════════════════
         // LINHA 2: CHECKBOXES DE FILTRO
@@ -204,11 +254,15 @@ public class ConfigWindow : Window, IDisposable
         {
             ImGui.Image(mogImage.Handle, new Vector2(50, 50));
             ImGui.SameLine();
+            var cursorPos = ImGui.GetCursorPos();
+            cursorPos.Y += 15;
+            ImGui.SetCursorPos(cursorPos);
             ImGui.Text(" - Mogstation Purchase");
         }
 
         if (boardImage != null) 
         {
+            ImGui.SameLine();
             ImGui.Image(boardImage.Handle, new Vector2(50, 50));
             ImGui.SameLine();
             ImGui.Text(" - Market Board Purchasable");
@@ -216,6 +270,7 @@ public class ConfigWindow : Window, IDisposable
 
         if (musicImage != null)
         {
+            ImGui.SameLine();
             ImGui.Image(musicImage.Handle, new Vector2(50, 50));
             ImGui.SameLine();
             ImGui.Text(" - Has Unique Music");
@@ -390,8 +445,13 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Separator();
 
         var filteredCount = filteredMounts.Count;
+
+        ImGui.PushFont(UiBuilder.IconFont);
+        ImGui.Text(FontAwesomeIcon.Lightbulb.ToIconString());
+        ImGui.PopFont();
+        ImGui.SameLine();
         ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1),
-            $"💡 Tip: Leave 'Custom BGM' empty to use default mount music  | Musics Changed: {configuration.MountMusicOverrides.Count}");
+            $"Tip: Leave 'Custom BGM' empty to use default mount music  | Musics Changed: {configuration.MountMusicOverrides.Count}");
     }
 
     /// <summary>

@@ -9,6 +9,8 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <!-- <PackageReference Include="ECommons" Version="*" /> -->
+    
     <!-- JSON Database -->
     <Content Include="external_data\mount_sources_complete.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
