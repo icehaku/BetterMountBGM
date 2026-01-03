@@ -1,10 +1,12 @@
 using BetterMountBGM;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 
@@ -14,6 +16,9 @@ public class ConfigWindow : Window, IDisposable
 {
     private readonly Configuration configuration;
     private readonly Plugin plugin;
+    private readonly string mogImagePath;
+    private readonly string boardImagePath;
+    private readonly string musicImagePath;
 
     // Cache de montarias
     private List<MountInfo>? unlockedMounts = null;
@@ -27,7 +32,7 @@ public class ConfigWindow : Window, IDisposable
     private bool showLockedMounts = true;
     private bool showMissingData = false;
 
-    // NOVO: Filtro por Type
+    // Filtro por Type
     private string selectedTypeFilter = "All Types";
     private List<string> availableTypes = new();
 
@@ -39,7 +44,7 @@ public class ConfigWindow : Window, IDisposable
         Name,
         Id,
         Unlocked,
-        Type  // NOVO: Ordenação por Type
+        Type
     }
 
     public ConfigWindow(Plugin plugin) : base("Better Mount BGM###MountMusicConfig")
@@ -47,12 +52,17 @@ public class ConfigWindow : Window, IDisposable
         this.plugin = plugin;
         configuration = plugin.Configuration;
 
-        Size = new Vector2(1100, 600);  // Aumentado para acomodar nova coluna
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(1400, 400),
-            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
+            MinimumSize = new Vector2(1400, 500),
+            MaximumSize = new Vector2(1400, float.MaxValue)
         };
+
+        //this.mogImagePath = mogImagePath;
+        this.mogImagePath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "mogstation_icon.png");
+        this.boardImagePath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "market_board_icon.png");
+        this.musicImagePath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "music_icon.png");
+
 
         // Carregar database de informações da wiki
         MountSourceHelper.LoadDatabase(Plugin.PluginInterface);
@@ -82,6 +92,10 @@ public class ConfigWindow : Window, IDisposable
             }
             return;
         }
+
+        var mogImage = Plugin.TextureProvider.GetFromFile(mogImagePath).GetWrapOrDefault();
+        var boardImage = Plugin.TextureProvider.GetFromFile(boardImagePath).GetWrapOrDefault();
+        var musicImage = Plugin.TextureProvider.GetFromFile(musicImagePath).GetWrapOrDefault();
 
         // ═══════════════════════════════════════════════════════════════
         // CABEÇALHO E CONTROLES
@@ -116,7 +130,7 @@ public class ConfigWindow : Window, IDisposable
             SortColumn.Name => "Alphabet",
             SortColumn.Id => "Id",
             SortColumn.Unlocked => "Unlocked",
-            SortColumn.Type => "Type",  // NOVO
+            SortColumn.Type => "Type",
             _ => "Alphabet"
         };
 
@@ -128,7 +142,7 @@ public class ConfigWindow : Window, IDisposable
                 currentSortColumn = SortColumn.Id;
             if (ImGui.Selectable("Unlocked", currentSortColumn == SortColumn.Unlocked))
                 currentSortColumn = SortColumn.Unlocked;
-            if (ImGui.Selectable("Type", currentSortColumn == SortColumn.Type))  // NOVO
+            if (ImGui.Selectable("Type", currentSortColumn == SortColumn.Type))
                 currentSortColumn = SortColumn.Type;
 
             ImGui.EndCombo();
@@ -175,14 +189,34 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.TextColored(new Vector4(0.3f, 0.8f, 1f, 1f), "Legends");
 
+        if (mogImage != null)
+        {
+            ImGui.Image(mogImage.Handle, new Vector2(50, 50));
+            ImGui.SameLine();
+            ImGui.Text(" - Mogstation Purchase");
+        }
+
+        if (boardImage != null) 
+        {
+            ImGui.Image(boardImage.Handle, new Vector2(50, 50));
+            ImGui.SameLine();
+            ImGui.Text(" - Market Board Purchasable");
+        }
+
+        if (musicImage != null)
+        {
+            ImGui.Image(musicImage.Handle, new Vector2(50, 50));
+            ImGui.SameLine();
+            ImGui.Text(" - Has Unique Music");
+        }
+
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
-
         
 
         // ═══════════════════════════════════════════════════════════════
-        // TABELA DE MONTARIAS (6 colunas: NOVA coluna Type)
+        // TABELA DE MONTARIAS
         // ═══════════════════════════════════════════════════════════════
 
         var filteredMounts = GetFilteredAndSortedMounts();
@@ -193,15 +227,16 @@ public class ConfigWindow : Window, IDisposable
             ImGuiTableFlags.ScrollY |
             ImGuiTableFlags.Resizable;
 
-        if (ImGui.BeginTable("MountsTable", 5, tableFlags, new Vector2(0, -30)))  // 6 colunas agora
+        if (ImGui.BeginTable("MountsTable", 6, tableFlags, new Vector2(0, -30)))
         {
             // Setup de colunas
-            ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthFixed, 50);
-            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed, 200);
-            ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 300);  // NOVA coluna
-            ImGui.TableSetupColumn("Acquired By", ImGuiTableColumnFlags.WidthStretch);
+            ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthFixed, 100);
+            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed, 100);
+            ImGui.TableSetupColumn("Mogstation/Market Board", ImGuiTableColumnFlags.WidthFixed, 30);
+            ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 200);
+            ImGui.TableSetupColumn("Acquired By", ImGuiTableColumnFlags.WidthFixed, 200);
             ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthFixed, 10);
-            ImGui.TableHeadersRow();  // NOVO: Headers visíveis
+            ImGui.TableHeadersRow();
 
             // Renderiza cada montaria
             foreach (var mount in filteredMounts)
@@ -210,7 +245,6 @@ public class ConfigWindow : Window, IDisposable
 
                 // Verifica se tem dados no JSON
                 bool hasMissingData = MountSourceHelper.GetMountSourceInfo(mount.Name) == null;
-                var mountInfo = MountSourceHelper.GetMountSourceInfo(mount.Name);
 
                 // Coluna: Ícone
                 ImGui.TableSetColumnIndex(0);
@@ -219,8 +253,38 @@ public class ConfigWindow : Window, IDisposable
                 // Coluna: Nome
                 ImGui.TableSetColumnIndex(1);
                 ImGui.AlignTextToFramePadding();
-                ImGui.Text(mount.Name);
+                ImGui.Text(ToCamelCase(mount.Name));
                 //ImGui.Text($"{mount.Name} (ID: {mount.MountId})");
+
+                // Mostrar seats abaixo do nome
+                var mountInfo = MountSourceHelper.GetMountSourceInfo(mount.Name);
+                if (mountInfo != null && mountInfo.Seats > 1)
+                {
+                    ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1), $"Seats x{mountInfo.Seats}");
+                }
+
+                // Coluna: Shop
+                ImGui.TableSetColumnIndex(2);
+
+                if (mogImage != null)
+                {
+                    var cursorPos = ImGui.GetCursorPos();
+                    cursorPos.Y += 5;
+                    ImGui.SetCursorPos(cursorPos);
+                    ImGui.Image(mogImage.Handle, new Vector2(50, 50));
+                }
+
+                ImGui.SameLine();
+                if (boardImage != null)
+                {
+                    ImGui.Image(boardImage.Handle, new Vector2(50, 50));
+                }
+
+                ImGui.SameLine();
+                if (musicImage != null)
+                {
+                    ImGui.Image(musicImage.Handle, new Vector2(50, 50));
+                }
 
                 // Coluna: Status (Unlocked/Locked)
                 //ImGui.TableSetColumnIndex(2);
@@ -235,7 +299,7 @@ public class ConfigWindow : Window, IDisposable
                 //}
 
                 // Coluna: Type
-                ImGui.TableSetColumnIndex(2);
+                ImGui.TableSetColumnIndex(3);
                 ImGui.AlignTextToFramePadding();
                 if (hasMissingData || mountInfo == null)
                 {
@@ -243,13 +307,13 @@ public class ConfigWindow : Window, IDisposable
                 }
                 else
                 {
-                    // Colorir por categoria para facilitar visualização
+                    // Colorir por categoria para dinamisar visualização
                     var typeColor = GetTypeColor(mountInfo.Type);
                     ImGui.TextColored(typeColor, mountInfo.Type);
                 }
 
                 // Coluna: Acquired By
-                ImGui.TableSetColumnIndex(3);
+                ImGui.TableSetColumnIndex(4);
                 ImGui.AlignTextToFramePadding();
 
                 if (hasMissingData)
@@ -263,7 +327,7 @@ public class ConfigWindow : Window, IDisposable
                 }
 
                 // Coluna: Custom BGM (input field)
-                ImGui.TableSetColumnIndex(4);
+                ImGui.TableSetColumnIndex(5);
                 RenderCustomBGMInput(mount);
             }
 
@@ -367,28 +431,59 @@ public class ConfigWindow : Window, IDisposable
 
         if (icon != null)
         {
-            // Definir cor da borda baseada no unlock status
-            var borderColor = mount.IsUnlocked
-                ? new Vector4(0.2f, 1f, 0.2f, 1)   // Verde para unlocked
-                : new Vector4(1f, 0.3f, 0.3f, 1);  // Vermelho para locked
+            var mountInfo = MountSourceHelper.GetMountSourceInfo(mount.Name);
+
+            // Determinar cor da borda (prioridade: unobtainable > unlock status)
+            Vector4 borderColor;
+            if (mountInfo != null && !mountInfo.Obtainable)
+            {
+                // Roxo escuro para unobtainable (sobrepõe tudo)
+                borderColor = new Vector4(0.4f, 0.2f, 0.6f, 1);
+            }
+            else if (mount.IsUnlocked)
+            {
+                // Verde para unlocked
+                borderColor = new Vector4(0.2f, 1f, 0.2f, 1);
+            }
+            else
+            {
+                // Vermelho para locked
+                borderColor = new Vector4(1f, 0.3f, 0.3f, 1);
+            }
 
             var cursorPos = ImGui.GetCursorScreenPos();
-            ImGui.Image(icon.Handle, new Vector2(40, 40));
+            if (mountInfo != null && !mountInfo.Obtainable)
+            {
+                var tintColor = mountInfo != null && !mountInfo.Obtainable
+                    ? new Vector4(0.5f, 0.5f, 0.5f, 1f)  // 50% escuro
+                    : new Vector4(1f, 1f, 1f, 1f);        // Normal
+
+                  ImGui.Image(icon.Handle, new Vector2(60, 60), Vector2.Zero, Vector2.One, tintColor);
+            } else {
+                ImGui.Image(icon.Handle, new Vector2(60, 60));
+            }
+
+            // Tooltip no hover ✨
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.EndTooltip();
+            }
 
             // Desenhar borda
             var drawList = ImGui.GetWindowDrawList();
             drawList.AddRect(
                 cursorPos,
-                new Vector2(cursorPos.X + 40, cursorPos.Y + 40),
+                new Vector2(cursorPos.X + 60, cursorPos.Y + 60),
                 ImGui.GetColorU32(borderColor),
                 0f,
                 ImDrawFlags.None,
-                2f  // Espessura da borda
+                2f
             );
         }
         else
         {
-            ImGui.Dummy(new Vector2(40, 40));
+            ImGui.Dummy(new Vector2(60, 60));
         }
     }
 
@@ -439,7 +534,7 @@ public class ConfigWindow : Window, IDisposable
 
         var filtered = sourceList.AsEnumerable();
 
-        // NOVO: Filtrar apenas montarias com ícone válido
+        // Filtrar apenas montarias com ícone válido
         filtered = filtered.Where(m => m.Icon > 0);
 
         // FILTRO: Show Missing Data
@@ -448,7 +543,7 @@ public class ConfigWindow : Window, IDisposable
             filtered = filtered.Where(m => MountSourceHelper.GetMountSourceInfo(m.Name) == null);
         }
 
-        // FILTRO: Por Type (NOVO)
+        // FILTRO: Por Type
         if (selectedTypeFilter != "All Types")
         {
             filtered = filtered.Where(m =>
@@ -481,7 +576,7 @@ public class ConfigWindow : Window, IDisposable
                 ? filtered.OrderByDescending(m => m.IsUnlocked).ThenBy(m => m.Name)
                 : filtered.OrderBy(m => m.Name),
 
-            // NOVO: Ordenação por Type
+            // Ordenação por Type
             SortColumn.Type => filtered.OrderBy(m =>
             {
                 var info = MountSourceHelper.GetMountSourceInfo(m.Name);
@@ -566,5 +661,13 @@ public class ConfigWindow : Window, IDisposable
             allMounts = new List<MountInfo>();
             mountsLoaded = false;
         }
+    }
+    private string ToCamelCase(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return text;
+
+        var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return string.Join(" ", words.Select(w =>
+            char.ToUpper(w[0]) + w.Substring(1).ToLower()));
     }
 }

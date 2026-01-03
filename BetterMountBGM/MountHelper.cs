@@ -32,6 +32,12 @@ public static class MountHelper
             return unlockedMounts;
         }
 
+
+        // DEBUG: Ver campos disponíveis em MOUNT
+        var firstMount = mountSheet.FirstOrDefault();
+        Plugin.Log.Information($"Mount fields test:");
+        Plugin.Log.Information($"Singular: {firstMount.Singular}");
+
         foreach (var mount in mountSheet)
         {
             // Pula entradas vazias

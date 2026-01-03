@@ -47,14 +47,12 @@ public sealed class Plugin : IDalamudPlugin
     public Plugin()
     {
         Framework.Update += OnFrameworkUpdate;
-        Log.Information($"Plugin loaded with Mount Music customization!");
+        Log.Information($"Better Mount BGM Plugin Loaded!");
 
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
-        var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
-
         ConfigWindow = new ConfigWindow(this);
-        MainWindow = new MainWindow(this, goatImagePath);
+        MainWindow = new MainWindow(this);
 
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
