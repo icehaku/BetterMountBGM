@@ -11,7 +11,7 @@ namespace BetterMountBGM.Windows;
 
 public class MainWindow : Window, IDisposable
 {
-    private readonly string goatImagePath;
+    private readonly string aboutImagePath;
     private readonly Plugin plugin;
 
     // We give this window a hidden ID using ##.
@@ -22,11 +22,11 @@ public class MainWindow : Window, IDisposable
     {
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(375, 330),
+            MinimumSize = new Vector2(920, 520),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
 
-        this.goatImagePath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png"); ;
+        this.aboutImagePath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "haku.jpg"); ;
         this.plugin = plugin;
     }
 
@@ -44,11 +44,11 @@ public class MainWindow : Window, IDisposable
         // Normally a BeginChild() would have to be followed by an unconditional EndChild(),
         // ImRaii takes care of this after the scope ends.
         // This works for all ImGui functions that require specific handling, examples are BeginTable() or Indent().
-        ImGui.Text("Have a goat2:");
-        var goatImage = Plugin.TextureProvider.GetFromFile(goatImagePath).GetWrapOrDefault();
-        if (goatImage != null)
+        ImGui.Text("About me!");
+        var aboutImage = Plugin.TextureProvider.GetFromFile(aboutImagePath).GetWrapOrDefault();
+        if (aboutImage != null)
         {
-            ImGui.Image(goatImage.Handle, new Vector2(30, 30));
+            ImGui.Image(aboutImage.Handle, new Vector2(900, 500));
         }
 
     }

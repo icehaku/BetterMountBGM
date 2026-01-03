@@ -16,9 +16,14 @@ public class ConfigWindow : Window, IDisposable
 {
     private readonly Configuration configuration;
     private readonly Plugin plugin;
+
+    // xxx
     private readonly string mogImagePath;
     private readonly string boardImagePath;
     private readonly string musicImagePath;
+
+    // type
+    private readonly string sharedFatesIconPath;    
 
     // Cache de montarias
     private List<MountInfo>? unlockedMounts = null;
@@ -54,8 +59,8 @@ public class ConfigWindow : Window, IDisposable
 
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(1400, 500),
-            MaximumSize = new Vector2(1400, float.MaxValue)
+            MinimumSize = new Vector2(1000, 500),
+            MaximumSize = new Vector2(float.MinValue, float.MaxValue)
         };
 
         //this.mogImagePath = mogImagePath;
@@ -63,6 +68,8 @@ public class ConfigWindow : Window, IDisposable
         this.boardImagePath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "market_board_icon.png");
         this.musicImagePath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "music_icon.png");
 
+        // Icones do TYPE
+        this.sharedFatesIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Shared_fates_icon1.png");
 
         // Carregar database de informações da wiki
         MountSourceHelper.LoadDatabase(Plugin.PluginInterface);
@@ -93,9 +100,13 @@ public class ConfigWindow : Window, IDisposable
             return;
         }
 
+        // xxx
         var mogImage = Plugin.TextureProvider.GetFromFile(mogImagePath).GetWrapOrDefault();
         var boardImage = Plugin.TextureProvider.GetFromFile(boardImagePath).GetWrapOrDefault();
         var musicImage = Plugin.TextureProvider.GetFromFile(musicImagePath).GetWrapOrDefault();
+
+        // types
+        var sharedFatesIcon = Plugin.TextureProvider.GetFromFile(sharedFatesIconPath).GetWrapOrDefault();
 
         // ═══════════════════════════════════════════════════════════════
         // CABEÇALHO E CONTROLES
@@ -148,6 +159,10 @@ public class ConfigWindow : Window, IDisposable
             ImGui.EndCombo();
         }
 
+        ImGui.SameLine();
+        ImGui.Checkbox("Show Locked Mounts", ref showLockedMounts);
+        //ImGui.Checkbox("Show Missing Data", ref showMissingData);
+
         ImGui.Separator();
         ImGui.Spacing();
         ImGui.TextColored(new Vector4(0.3f, 0.8f, 1f, 1f), "Filters");
@@ -182,10 +197,6 @@ public class ConfigWindow : Window, IDisposable
         // ═══════════════════════════════════════════════════════════════
         // LINHA 2: CHECKBOXES DE FILTRO
         // ═══════════════════════════════════════════════════════════════
-
-        ImGui.Checkbox("Show Locked Mounts", ref showLockedMounts);
-        ImGui.SameLine();
-        ImGui.Checkbox("Show Missing Data", ref showMissingData);
 
         ImGui.TextColored(new Vector4(0.3f, 0.8f, 1f, 1f), "Legends");
 
@@ -230,12 +241,12 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.BeginTable("MountsTable", 6, tableFlags, new Vector2(0, -30)))
         {
             // Setup de colunas
-            ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthFixed, 100);
-            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed, 100);
-            ImGui.TableSetupColumn("Mogstation/Market Board", ImGuiTableColumnFlags.WidthFixed, 30);
-            ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 200);
-            ImGui.TableSetupColumn("Acquired By", ImGuiTableColumnFlags.WidthFixed, 200);
-            ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthFixed, 10);
+            ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize, 60);
+            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize, 150);
+            ImGui.TableSetupColumn("Info", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize, 166);
+            ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize, 50);
+            ImGui.TableSetupColumn("Acquired By", ImGuiTableColumnFlags.WidthStretch);  // Pega o resto
+            ImGui.TableSetupColumn("Custom BGM", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize, 120);
             ImGui.TableHeadersRow();
 
             // Renderiza cada montaria
@@ -253,7 +264,7 @@ public class ConfigWindow : Window, IDisposable
                 // Coluna: Nome
                 ImGui.TableSetColumnIndex(1);
                 ImGui.AlignTextToFramePadding();
-                ImGui.Text(ToCamelCase(mount.Name));
+                ImGui.TextWrapped(ToCamelCase(mount.Name));
                 //ImGui.Text($"{mount.Name} (ID: {mount.MountId})");
 
                 // Mostrar seats abaixo do nome
@@ -266,24 +277,44 @@ public class ConfigWindow : Window, IDisposable
                 // Coluna: Shop
                 ImGui.TableSetColumnIndex(2);
 
+                // Ícone Mogstation
                 if (mogImage != null)
                 {
                     var cursorPos = ImGui.GetCursorPos();
                     cursorPos.Y += 5;
                     ImGui.SetCursorPos(cursorPos);
-                    ImGui.Image(mogImage.Handle, new Vector2(50, 50));
+
+                    var tintMog = (mountInfo != null && mountInfo.CashShop)
+                        ? new Vector4(1f, 1f, 1f, 1f)      // Normal (tem na Mogstation)
+                        : new Vector4(0.3f, 0.3f, 0.3f, 1f); // Escuro (não tem)
+
+                    ImGui.Image(mogImage.Handle, new Vector2(50, 50), Vector2.Zero, Vector2.One, tintMog);
                 }
 
                 ImGui.SameLine();
+
+                // Ícone Market Board
                 if (boardImage != null)
                 {
-                    ImGui.Image(boardImage.Handle, new Vector2(50, 50));
+                    var tintBoard = (mountInfo != null && mountInfo.MarketBoard)
+                        ? new Vector4(1f, 1f, 1f, 1f)      // Normal (vendável no MB)
+                        : new Vector4(0.3f, 0.3f, 0.3f, 1f); // Escuro (não vendável)
+
+                    ImGui.Image(boardImage.Handle, new Vector2(50, 50), Vector2.Zero, Vector2.One, tintBoard);
                 }
 
                 ImGui.SameLine();
+
+                // Ícone Music (tem BGM customizado configurado?)
                 if (musicImage != null)
                 {
-                    ImGui.Image(musicImage.Handle, new Vector2(50, 50));
+                    var hasUniqueMusic = mount.RideBGM != 638 && mount.RideBGM != 319 && mount.RideBGM != 895 && mount.RideBGM != 0;
+
+                    var tintMusic = hasUniqueMusic
+                        ? new Vector4(1f, 1f, 1f, 1f)      // Claro
+                        : new Vector4(0.3f, 0.3f, 0.3f, 1f); // Escuro
+
+                    ImGui.Image(musicImage.Handle, new Vector2(50, 50), Vector2.Zero, Vector2.One, tintMusic);
                 }
 
                 // Coluna: Status (Unlocked/Locked)
@@ -300,17 +331,34 @@ public class ConfigWindow : Window, IDisposable
 
                 // Coluna: Type
                 ImGui.TableSetColumnIndex(3);
-                ImGui.AlignTextToFramePadding();
-                if (hasMissingData || mountInfo == null)
+                if (sharedFatesIcon != null)
                 {
-                    ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1), "Unknown");
+                    var cursorPos = ImGui.GetCursorPos();
+                    cursorPos.Y += 5;
+                    ImGui.SetCursorPos(cursorPos);
+
+                    ImGui.Image(sharedFatesIcon.Handle, new Vector2(50, 50));
+
+                    if (ImGui.IsItemHovered() && mountInfo != null)
+                    {
+                        ImGui.BeginTooltip();
+                        // Colorir por categoria para dinamisar visualização
+                        var typeColor = GetTypeColor(mountInfo.Type);
+                        ImGui.TextColored(typeColor, mountInfo.Type);
+                        ImGui.EndTooltip();
+                    }
                 }
-                else
-                {
-                    // Colorir por categoria para dinamisar visualização
-                    var typeColor = GetTypeColor(mountInfo.Type);
-                    ImGui.TextColored(typeColor, mountInfo.Type);
-                }
+                //ImGui.AlignTextToFramePadding();
+                //if (hasMissingData || mountInfo == null)
+                //{
+                //    ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1), "Unknown");
+                //}
+                //else
+                //{
+                //    // Colorir por categoria para dinamisar visualização
+                //    var typeColor = GetTypeColor(mountInfo.Type);
+                //    ImGui.TextColored(typeColor, mountInfo.Type);
+                //}
 
                 // Coluna: Acquired By
                 ImGui.TableSetColumnIndex(4);
@@ -435,26 +483,26 @@ public class ConfigWindow : Window, IDisposable
 
             // Determinar cor da borda (prioridade: unobtainable > unlock status)
             Vector4 borderColor;
-            if (mountInfo != null && !mountInfo.Obtainable)
-            {
-                // Roxo escuro para unobtainable (sobrepõe tudo)
-                borderColor = new Vector4(0.4f, 0.2f, 0.6f, 1);
-            }
-            else if (mount.IsUnlocked)
+            if (mountInfo != null && mount.IsUnlocked)
             {
                 // Verde para unlocked
                 borderColor = new Vector4(0.2f, 1f, 0.2f, 1);
             }
-            else
+            else if (mountInfo != null && mountInfo.Obtainable)
             {
                 // Vermelho para locked
                 borderColor = new Vector4(1f, 0.3f, 0.3f, 1);
+            }
+            else
+            {
+                // Roxo escuro para unobtainable
+                borderColor = new Vector4(0.4f, 0.2f, 0.6f, 1);
             }
 
             var cursorPos = ImGui.GetCursorScreenPos();
             if (mountInfo != null && !mountInfo.Obtainable)
             {
-                var tintColor = mountInfo != null && !mountInfo.Obtainable
+                var tintColor = mountInfo != null && !mountInfo.Obtainable && !mount.IsUnlocked
                     ? new Vector4(0.5f, 0.5f, 0.5f, 1f)  // 50% escuro
                     : new Vector4(1f, 1f, 1f, 1f);        // Normal
 

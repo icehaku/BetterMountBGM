@@ -30,9 +30,11 @@
     <Content Include="images\music_icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>          
-    <Content Include="..\Data\goat.png">
+    <Content Include="images\haku.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Visible>false</Visible>    
     </Content>
+    <Content Include="images\types\Shared_fates_icon1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>    
   </ItemGroup>
 </Project>

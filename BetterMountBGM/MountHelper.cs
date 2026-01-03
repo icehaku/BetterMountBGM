@@ -59,7 +59,8 @@ public static class MountHelper
                     MountId = mount.RowId,
                     Name = mount.Singular.ToString(),
                     Icon = mount.Icon,
-                    Order = mount.Order
+                    Order = mount.Order,
+                    RideBGM = mount.RideBGM.RowId
                 });
             }
         }
@@ -141,7 +142,8 @@ public static class MountHelper
                 Name = mount.Singular.ToString(),
                 Icon = mount.Icon,
                 Order = mount.Order,
-                IsUnlocked = isUnlocked
+                IsUnlocked = isUnlocked,
+                RideBGM = mount.RideBGM.RowId
             });
         }
 
@@ -173,4 +175,5 @@ public class MountInfo
     public ushort Icon { get; set; }
     public short Order { get; set; }
     public bool IsUnlocked { get; set; } = true; // Por padrão true para compatibilidade
+    public uint RideBGM { get; set; } = 0;
 }
