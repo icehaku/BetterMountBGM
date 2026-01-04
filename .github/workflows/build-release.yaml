@@ -38,10 +38,14 @@ jobs:
             -p:AssemblyVersion=$VERSION \
             -p:FileVersion=$VERSION
 
+      - name: Debug zip location
+        run: |
+          find bin -name "*.zip"
+
       - name: Upload zip to Release
         run: |
           gh release upload \
             ${{ github.event.release.tag_name }} \
-            bin/Release/SeuPlugin/latest.zip
+            bin/Release/BetterMountBGM/latest.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
