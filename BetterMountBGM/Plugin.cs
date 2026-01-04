@@ -37,7 +37,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
 
 
-    private const string CommandName = "/pmycommand";
+    // private const string CommandName = "/pmycommand";
 
     public Configuration Configuration { get; init; }
 
@@ -60,10 +60,10 @@ public sealed class Plugin : IDalamudPlugin
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
 
-        CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
-        {
-            HelpMessage = "A useful message to display in /xlhelp"
-        });
+        //CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
+        //{
+        //    HelpMessage = "A useful message to display in /xlhelp"
+        //});
 
         PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
         PluginInterface.UiBuilder.OpenConfigUi += ToggleMainUi;
@@ -84,7 +84,7 @@ public sealed class Plugin : IDalamudPlugin
         ConfigWindow.Dispose();
         MainWindow.Dispose();
 
-        CommandManager.RemoveHandler(CommandName);
+        //CommandManager.RemoveHandler(CommandName);
         Framework.Update -= OnFrameworkUpdate;
     }
 

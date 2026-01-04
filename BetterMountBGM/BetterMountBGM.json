@@ -1,7 +1,7 @@
 {
   "Author": "Ice Haku",
   "Name": "Better Mount BGM",
-  "Punchline": "Tired of every mount with the same generic music? Set the music you want for any want!",
+  "Punchline": "Tired of every mount with the same generic music? Set the music you want for any mount you want!",
   "Description": "A Plugin that allows the user to customize the mount music choosing a different BGM for it.",
   "Tags": ["mount", "bgm", "customization", "music"],
   "InternalName": "BetterMountBGM",
@@ -17,7 +17,7 @@
   "TestingAssemblyVersion": "0.0.0.277",
   // "DownloadLinkTesting": "https://puni.sh/api/plugins/download/54/AutoDuty/versions/0.0.0.277/testing.zip",
   "TestingDalamudApiLevel": "13",
-  "IconUrl": "https://raw.githubusercontent.com/icehaku/BetterMountBGM/refs/heads/main/BetterMountBGM/images/icon.png",
+  "IconUrl": "images/icon.png",
   "ImageUrls": [
     "https://github.com/icehaku/BetterMountBGM/blob/main/BetterMountBGM/images/better_mount_bgm_1.png?raw=true",
     "https://github.com/icehaku/BetterMountBGM/blob/main/BetterMountBGM/images/better_mount_bgm_2.png?raw=true"
