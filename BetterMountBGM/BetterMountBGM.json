@@ -7,7 +7,7 @@
   "InternalName": "BetterMountBGM",
   "RepoUrl": "https://github.com/icehaku/BetterMountBGM",
   "DownloadCount": 777,
-  "LastUpdate": 1767027463,
+  "LastUpdate": 1735689600,
   // "DownloadLinkInstall": "https://puni.sh/api/plugins/download/54/AutoDuty/versions/0.0.0.284/latest.zip",
   // "DownloadLinkUpdate": "https://puni.sh/api/plugins/download/54/AutoDuty/versions/0.0.0.284/latest.zip",
   // "AssemblyVersion": "0.0.0.284",
@@ -18,11 +18,8 @@
   // "DownloadLinkTesting": "https://puni.sh/api/plugins/download/54/AutoDuty/versions/0.0.0.277/testing.zip",
   "TestingDalamudApiLevel": "13",
   "IconUrl": "https://raw.githubusercontent.com/icehaku/BetterMountBGM/refs/heads/main/BetterMountBGM/images/icon.png",
-  // "ImageUrls": [
-  //   "https://s3.puni.sh/media/plugin/54/image-15l1o9gf3yg.png",
-  //   "https://s3.puni.sh/media/plugin/54/image-gc84lu4pdpb.png",
-  //   "https://s3.puni.sh/media/plugin/54/image-vkvtqki3ggh.png",
-  //   "https://s3.puni.sh/media/plugin/54/image-pw9lcsan22.png",
-  //   "https://s3.puni.sh/media/plugin/54/image-5lu04i95hz8.png"
-  // ]
+  "ImageUrls": [
+    "https://github.com/icehaku/BetterMountBGM/blob/main/BetterMountBGM/images/better_mount_bgm_1.png?raw=true",
+    "https://github.com/icehaku/BetterMountBGM/blob/main/BetterMountBGM/images/better_mount_bgm_2.png?raw=true"
+  ]
 }
