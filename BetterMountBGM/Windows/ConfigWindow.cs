@@ -776,7 +776,7 @@ public class ConfigWindow : Window, IDisposable
         var selectedBGM = bgmList.FirstOrDefault(b => b.ID == currentBGM);
         var displayText = selectedBGM != null ? $"{selectedBGM.ID} - {selectedBGM.Title}" : "Select BGM...";
 
-        ImGui.SetNextItemWidth(-1);
+        ImGui.SetNextItemWidth(-40);
         if (ImGui.BeginCombo($"##bgm_{mount.MountId}", displayText))
         {
             ImGui.InputTextWithHint("##bgmsearch", "Search BGM by Name/ID/Location...", ref bgmSearchFilter, 50);
@@ -832,18 +832,64 @@ public class ConfigWindow : Window, IDisposable
             ImGui.EndCombo();
         }
 
-        // Show selected BGM name below
-        if (selectedBGM != null)
+        ImGui.SameLine();
+        ImGui.PushFont(UiBuilder.IconFont);
+        if (ImGui.Button($"{FontAwesomeIcon.Trash.ToIconString()}##remove_{mount.MountId}"))
         {
-            ImGui.TextColored(new Vector4(0.6f, 0.8f, 1f, 1f), selectedBGM.Title);
-            ImGui.SameLine();
-            ImGui.PushFont(UiBuilder.IconFont);
-            if (ImGui.Button($"{FontAwesomeIcon.Trash.ToIconString()}##remove_{mount.MountId}"))
+            configuration.MountMusicOverrides.Remove(mount.MountId);
+            configuration.Save();
+        }
+        ImGui.PopFont();
+
+        // Show selected BGM name below
+        ushort displayBgmId = 0;
+        bool isUserCustom = false;
+
+        // Prioridade 1: Customização do usuário
+        if (configuration.MountMusicOverrides.TryGetValue(mount.MountId, out var userBgm))
+        {
+            displayBgmId = userBgm;
+            isUserCustom = true;
+        }
+        // Prioridade 2: Configuração do autor
+        else if (plugin.Configuration.UseAuthorBGMCustomization && plugin.authorBGMConfig != null)
+        {
+            var authorOverride = plugin.authorBGMConfig.MountBgmOverrides.FirstOrDefault(x => x.MountId == mount.MountId);
+            if (authorOverride != null)
             {
-                configuration.MountMusicOverrides.Remove(mount.MountId);
-                configuration.Save();
+                displayBgmId = (ushort)authorOverride.BgmId;
             }
-            ImGui.PopFont();
+        }
+
+        // Mostrar nome se houver customização
+        if (displayBgmId > 0)
+        {
+            var bgmInfo = bgmList.FirstOrDefault(b => b.ID == displayBgmId);
+            if (bgmInfo != null)
+            {
+                var color = isUserCustom
+                    ? new Vector4(1f, 1f, 1f, 1f)      // Branco - usuário
+                    : new Vector4(0.6f, 0.8f, 1f, 1f); // Azul - autor
+
+                ImGui.TextColored(color, bgmInfo.Title);
+
+                if (!isUserCustom)
+                {
+                    ImGui.SameLine();
+                    ImGui.PushFont(UiBuilder.IconFont);
+                    ImGui.TextDisabled(FontAwesomeIcon.InfoCircle.ToIconString());
+                    ImGui.PopFont();
+                    if (ImGui.IsItemHovered())
+                    {
+                        ImGui.BeginTooltip();
+                        ImGui.Text("Default customization by author configuration.");
+                        ImGui.Text("You can disable this on the settings [Use Author BGM Customization]");
+                        ImGui.Text("or just override by selectiong your own music for customization.");
+
+                        ImGui.EndTooltip();
+                    }
+                }
+            }
         }
     }
 

@@ -11,6 +11,16 @@
   <ItemGroup>
     <!-- <PackageReference Include="ECommons" Version="*" /> -->
 
+    <!-- Plugin Icon -->
+    <Content Include="icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+
+    <!-- JSON Author Configuration -->
+    <Content Include="external_data\author_bgm_config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+
     <!-- JSON Mount Database -->
     <Content Include="external_data\mount_sources_complete.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

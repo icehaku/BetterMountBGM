@@ -1,12 +1,28 @@
 {
   "Author": "Ice Haku",
-  "Name": "BetterMountBGM",
-  "Punchline": "version 0.1",
-  "Description": "BetterMountBGM Description",
+  "Name": "Better Mount BGM",
+  "Punchline": "Tired of every mount with the same generic music? Set the music you want for any want!",
+  "Description": "A Plugin that allows the user to customize the mount music choosing a different BGM for it.",
+  "Tags": ["mount", "bgm", "customization", "music"],
+  "InternalName": "BetterMountBGM",
+  "RepoUrl": "https://github.com/icehaku/BetterMountBGM",
+  "DownloadCount": 777,
+  "LastUpdate": 1767027463,
+  // "DownloadLinkInstall": "https://puni.sh/api/plugins/download/54/AutoDuty/versions/0.0.0.284/latest.zip",
+  // "DownloadLinkUpdate": "https://puni.sh/api/plugins/download/54/AutoDuty/versions/0.0.0.284/latest.zip",
+  // "AssemblyVersion": "0.0.0.284",
   "ApplicableVersion": "any",
-  "Tags": [
-    "sample",
-    "plugin",
-    "goats"
-  ]
+  "DalamudApiLevel": "14",
+  "Changelog": "...",
+  "TestingAssemblyVersion": "0.0.0.277",
+  // "DownloadLinkTesting": "https://puni.sh/api/plugins/download/54/AutoDuty/versions/0.0.0.277/testing.zip",
+  "TestingDalamudApiLevel": "13",
+  "IconUrl": "https://s3.puni.sh/media/plugin/54/icon-15ug2vnr9m1.png",
+  // "ImageUrls": [
+  //   "https://s3.puni.sh/media/plugin/54/image-15l1o9gf3yg.png",
+  //   "https://s3.puni.sh/media/plugin/54/image-gc84lu4pdpb.png",
+  //   "https://s3.puni.sh/media/plugin/54/image-vkvtqki3ggh.png",
+  //   "https://s3.puni.sh/media/plugin/54/image-pw9lcsan22.png",
+  //   "https://s3.puni.sh/media/plugin/54/image-5lu04i95hz8.png"
+  // ]
 }

@@ -14,7 +14,6 @@ public class MainWindow : Window, IDisposable
 {
     private readonly string aboutImagePath;
     private readonly Plugin plugin;
-    private bool useAuthorBgmCustomization = true;
 
     // We give this window a hidden ID using ##.
     // The user will see "My Amazing Window" as window title,
@@ -36,19 +35,20 @@ public class MainWindow : Window, IDisposable
 
     public override void Draw()
     {
-        // TO-DO!
-        //ImGui.Checkbox("Use Author BGM Customization", ref useAuthorBgmCustomization);
-        //ImGui.SameLine();
-        //ImGui.PushFont(UiBuilder.IconFont);
-        //ImGui.Text(FontAwesomeIcon.InfoCircle.ToIconString());
-        //ImGui.PopFont();
-        //if (ImGui.IsItemHovered())
-        //{   ImGui.SameLine();
-        //    ImGui.BeginTooltip();
-        //    ImGui.Text("This will set every mount that dosn't have a unique bgm, to a different one choosed by the plugin author!");
-        //    ImGui.Text("If you configure any customization it will always take priorite over this.");
-        //    ImGui.EndTooltip();
-        //}
+        var useAuthor = plugin.Configuration.UseAuthorBGMCustomization;
+        ImGui.Checkbox("Use Author BGM Customization", ref useAuthor);
+        ImGui.SameLine();
+        ImGui.PushFont(UiBuilder.IconFont);
+        ImGui.Text(FontAwesomeIcon.InfoCircle.ToIconString());
+        ImGui.PopFont();
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SameLine();
+            ImGui.BeginTooltip();
+            ImGui.Text("This will set every mount that dosn't have a unique bgm, to a different one choosed by the plugin author!");
+            ImGui.Text("If you configure any customization it will always take priorite over this.");
+            ImGui.EndTooltip();
+        }
 
         if (ImGui.Button("BGM Customization Menu"))
         {

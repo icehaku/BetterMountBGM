@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json;
+
 
 namespace BetterMountBGM;
 
@@ -43,6 +45,7 @@ public sealed class Plugin : IDalamudPlugin
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
     private uint lastMountId = 0;
+    public BGMConfiguration? authorBGMConfig = null;
 
     public Plugin()
     {
@@ -65,6 +68,8 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
         PluginInterface.UiBuilder.OpenConfigUi += ToggleMainUi;
         PluginInterface.UiBuilder.OpenMainUi +=  ToggleConfigUi;
+
+        LoadAuthorBGMConfig();
 
         Log.Information($"Plugin loaded!");
     }
@@ -142,36 +147,31 @@ public sealed class Plugin : IDalamudPlugin
 
     private void OnPlayerMounted(uint mountId)
     {
-        Log.Information($"Player mounted: Mount ID {mountId}");
+        Log.Information($"UseAuthorBGMCustomization: {Configuration.UseAuthorBGMCustomization}");
+        Log.Information($"AuthorConfig loaded: {authorBGMConfig != null}");
+        Log.Information($"AuthorConfig count: {authorBGMConfig?.MountBgmOverrides.Count ?? 0}");
 
-        // Verifica se tem override customizado
+        // Prioridade 1: Customização do usuário
         if (Configuration.MountMusicOverrides.TryGetValue(mountId, out var customBgmId))
         {
-            Log.Information($"Applying custom BGM {customBgmId} to mount {mountId}");
+            Log.Information($"Applying user custom BGM {customBgmId}");
+            ApplyBGM(customBgmId);
+            return;
+        }
 
-            // Pequeno delay para garantir que mount está estável
-            System.Threading.Tasks.Task.Delay(150).ContinueWith(_ =>
-            {
-                Framework.RunOnFrameworkThread(() =>
-                {
-                    try
-                    {
-                        unsafe
-                        {
-                            BGMSystem.SetBGM(customBgmId, 0);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error($"Error setting custom BGM: {ex.Message}");
-                    }
-                });
-            });
-        }
-        else
+        // Prioridade 2: Configuração do autor (se habilitada)
+        if (Configuration.UseAuthorBGMCustomization && authorBGMConfig != null)
         {
-            Log.Information($"Using default BGM for mount {mountId}");
+            var authorOverride = authorBGMConfig?.MountBgmOverrides.FirstOrDefault(x => x.MountId == mountId);
+            if (authorOverride != null)
+            {
+                Log.Information($"Applying author BGM {authorOverride.BgmId}");
+                ApplyBGM(authorOverride.BgmId);
+                return;
+            }
         }
+
+        Log.Information($"Using default BGM for mount {mountId}");
     }
 
     private void OnPlayerDismounted()
@@ -189,6 +189,49 @@ public sealed class Plugin : IDalamudPlugin
         catch (Exception ex)
         {
             Log.Error($"Error resetting BGM: {ex.Message}");
+        }
+    }
+
+    private void ApplyBGM(ushort bgmId)
+    {
+        System.Threading.Tasks.Task.Delay(150).ContinueWith(_ =>
+        {
+            Framework.RunOnFrameworkThread(() =>
+            {
+                try
+                {
+                    unsafe { BGMSystem.SetBGM(bgmId, 0); }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Error setting BGM: {ex.Message}");
+                }
+            });
+        });
+    }
+
+    private void LoadAuthorBGMConfig()
+    {
+        try
+        {
+            var jsonPath = Path.Combine(
+                PluginInterface.AssemblyLocation.Directory?.FullName!,
+                "external_data",
+                "author_bgm_config.json");
+
+            if (!File.Exists(jsonPath))
+            {
+                Log.Warning("Author BGM config not found");
+                return;
+            }
+
+            var json = File.ReadAllText(jsonPath);
+            authorBGMConfig = JsonSerializer.Deserialize<BGMConfiguration>(json);
+            Log.Information($"Loaded author BGM config: {authorBGMConfig?.MountBgmOverrides.Count ?? 0} mounts");
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error loading author BGM config: {ex.Message}");
         }
     }
 

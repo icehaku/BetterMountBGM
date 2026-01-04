@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "name": "Author Configuration",
+  "author": "Ice",
+  "mount_bgm_overrides": [
+    { "mount_id": 400, "mount_name": "Yan", "bgm_id": 20147, "bgm_name": "Back to the Drawing Board" },
+    { "mount_id": 343, "mount_name": "Air-wheeler A9", "bgm_id": 20047, "bgm_name": "Starless Skyline" },
+    { "mount_id": 263, "mount_name": "Argos", "bgm_id": 899, "bgm_name": "Flow Together" },
+    { "mount_id": 186, "mount_name": "Demi-Ozma", "bgm_id": 394, "bgm_name": "A Thousand Faces" },
+    { "mount_id": 312, "mount_name": "Blackjack", "bgm_id": 232, "bgm_name": "The Decisiv Battle" },
+    { "mount_id": 235, "mount_name": "Cerberus", "bgm_id": 796, "bgm_name": "The Queen Awakens" },
+    { "mount_id": 348, "mount_name": "Mehwapyarra", "bgm_id": 694, "bgm_name": "A Long Fall" },
+    { "mount_id": 207, "mount_name": "Forgiven Reticence", "bgm_id": 695, "bgm_name": "Insatiable" }
+  ]
+}
