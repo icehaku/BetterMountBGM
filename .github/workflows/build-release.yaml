@@ -26,13 +26,18 @@ jobs:
           wget https://goatcorp.github.io/dalamud-distrib/latest.zip -O dalamud.zip
           unzip dalamud.zip -d $DALAMUD_HOME
 
-      - name: Build Release
-        run: |
-          VERSION=${GITHUB_REF_NAME#v}
-          dotnet build -c Release \
-            -p:AssemblyVersion=$VERSION \
-            -p:FileVersion=$VERSION \
-            -p:Version=$VERSION
+    - name: Build Release
+      run: |
+        RAW_VERSION=${GITHUB_REF_NAME#v}
+        VERSION=$(echo "$RAW_VERSION" | sed 's/[^0-9.].*$//')
+
+        echo "Raw version: $RAW_VERSION"
+        echo "Assembly version: $VERSION"
+
+        dotnet build -c Release \
+          -p:AssemblyVersion=$VERSION \
+          -p:FileVersion=$VERSION \
+          -p:Version=$RAW_VERSION
 
       - name: Upload zip to Release
         run: |
