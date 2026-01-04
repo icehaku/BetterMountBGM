@@ -36,6 +36,10 @@ jobs:
             -p:AssemblyVersion=$VERSION \
             -p:FileVersion=$VERSION
 
+      - name: Debug zip location
+        run: |
+          find . -name "latest.zip"
+
       - name: Upload zip to Release
         run: |
           gh release upload \
