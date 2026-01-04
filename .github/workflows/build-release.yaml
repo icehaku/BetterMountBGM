@@ -31,10 +31,8 @@ jobs:
           RAW_VERSION=${GITHUB_REF_NAME#v}
           VERSION=$(echo "$RAW_VERSION" | sed 's/[^0-9.].*$//')
 
-          echo "Raw version: $RAW_VERSION"
-          echo "Assembly version: $VERSION"
-
-          dotnet build -c Release \
+          dotnet build BetterMountBGM/BetterMountBGM.csproj \
+            -c Release \
             -p:AssemblyVersion=$VERSION \
             -p:FileVersion=$VERSION
 
