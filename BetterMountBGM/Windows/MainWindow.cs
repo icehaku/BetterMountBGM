@@ -36,18 +36,19 @@ public class MainWindow : Window, IDisposable
 
     public override void Draw()
     {
-        ImGui.Checkbox("Use Author BGM Customization", ref useAuthorBgmCustomization);
-        ImGui.SameLine();
-        ImGui.PushFont(UiBuilder.IconFont);
-        ImGui.Text(FontAwesomeIcon.InfoCircle.ToIconString());
-        ImGui.PopFont();
-        if (ImGui.IsItemHovered())
-        {   ImGui.SameLine();
-            ImGui.BeginTooltip();
-            ImGui.Text("This will set every mount that dosn't have a unique bgm, to a different one choosed by the plugin author!");
-            ImGui.Text("If you configure any customization it will always take priorite over this.");
-            ImGui.EndTooltip();
-        }
+        // TO-DO!
+        //ImGui.Checkbox("Use Author BGM Customization", ref useAuthorBgmCustomization);
+        //ImGui.SameLine();
+        //ImGui.PushFont(UiBuilder.IconFont);
+        //ImGui.Text(FontAwesomeIcon.InfoCircle.ToIconString());
+        //ImGui.PopFont();
+        //if (ImGui.IsItemHovered())
+        //{   ImGui.SameLine();
+        //    ImGui.BeginTooltip();
+        //    ImGui.Text("This will set every mount that dosn't have a unique bgm, to a different one choosed by the plugin author!");
+        //    ImGui.Text("If you configure any customization it will always take priorite over this.");
+        //    ImGui.EndTooltip();
+        //}
 
         if (ImGui.Button("BGM Customization Menu"))
         {

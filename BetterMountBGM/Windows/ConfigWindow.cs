@@ -34,7 +34,42 @@ public class ConfigWindow : Window, IDisposable
     private readonly string musicImagePath;
 
     // type
-    private readonly string sharedFatesIconPath;    
+    private readonly string sharedFatesIconPath; // Shared_fates_icon1.png
+    private readonly string achievementCurrencyIconPath; // Achievement_currency_icon1.png
+    private readonly string achievementsIconPath; // Achievements_icon1.png
+    private readonly string airshipVenturesIconPath; // Airship_ventures_icon1.png
+    private readonly string alliedSocietyQuestsIconPath; // Allied_society_quests_icon1.png
+    private readonly string bozjaIconPath; // Bozja_icon1.png
+    private readonly string campaignsIconPath; // Campaigns_icon1.png
+    private readonly string chaoticAllianceRaidIconPath; // Chaotic_alliance_raid_icon1.png
+    private readonly string cosmicExplorationIconPath; // Cosmic_exploration_icon1.png
+    private readonly string craftingIconPath; // Crafting_icon1.png
+    private readonly string customDeliveriesIconPath; // Custom_deliveries_icon1.png
+    private readonly string deepDungeonsIconPath; // Deep_dungeons_icon1.png
+    private readonly string dungeonsIconPath; // Dungeons_icon1.png
+    private readonly string eurekaIconPath; // Eureka_icon1.png
+    private readonly string fatesIconPath; // Fates_icon1.png
+    private readonly string fauxHollowsIconPath; // Faux_hollows_icon1.png
+    private readonly string gatheringIconPath; // Gathering_icon1.png
+    private readonly string gilIconPath; // Gil_icon1.png
+    private readonly string goldSaucerIconPath; // Gold_saucer_icon1.png
+    private readonly string ishgardianRestorationIconPath; // Ishgardian_restoration_icon1.png
+    private readonly string islandSanctuaryIconPath; // Island_sanctuary_icon1.png
+    private readonly string limitedIconPath; // Limited_icon1.png
+    private readonly string mainScenarioIconPath; // Main_scenario_icon1.png
+    private readonly string occultCrescentIconPath; // Occult_crescent_icon1.png
+    private readonly string premiumIconPath; // Premium_icon1.png
+    private readonly string pvpIconPath; // Pvp_icon1.png
+    private readonly string questsIconPath; // Quests_icon1.png
+    private readonly string raidsIconPath; // Raids_icon1.png
+    private readonly string seasonalEventsIconPath; // Seasonal_events_icon1.png
+    private readonly string sharedFatesIcon1Path; // Shared_fates_icon1.png
+    private readonly string theHuntIconPath; // The_hunt_icon1.png
+    private readonly string treasureHuntIconPath; // Treasure_hunt_icon1.png
+    private readonly string trialsIconPath; // Trials_icon1.png
+    private readonly string unknownIconPath; // Unknown_Icon.png
+    private readonly string variantAndCriterionDungeonsIconPath; // Variant_and_criterion_dungeons_icon1.png
+    private readonly string wondrousTailsIconPath; // Wondrous_tails_icon1.png
 
     // Cache de montarias
     private List<MountInfo>? unlockedMounts = null;
@@ -87,7 +122,42 @@ public class ConfigWindow : Window, IDisposable
 
         // Icones do TYPE
         this.sharedFatesIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Shared_fates_icon1.png");
-
+        this.achievementCurrencyIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Achievement_currency_icon1.png");
+        this.achievementsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Achievements_icon1.png");
+        this.airshipVenturesIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Airship_ventures_icon1.png");
+        this.alliedSocietyQuestsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Allied_society_quests_icon1.png");
+        this.bozjaIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Bozja_icon1.png");
+        this.campaignsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Campaigns_icon1.png");
+        this.chaoticAllianceRaidIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Chaotic_alliance_raid_icon1.png");
+        this.cosmicExplorationIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Cosmic_exploration_icon1.png");
+        this.craftingIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Crafting_icon1.png");
+        this.customDeliveriesIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Custom_deliveries_icon1.png");
+        this.deepDungeonsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Deep_dungeons_icon1.png");
+        this.dungeonsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Dungeons_icon1.png");
+        this.eurekaIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Eureka_icon1.png");
+        this.fatesIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Fates_icon1.png");
+        this.fauxHollowsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Faux_hollows_icon1.png");
+        this.gatheringIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Gathering_icon1.png");
+        this.gilIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Gil_icon1.png");
+        this.goldSaucerIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Gold_saucer_icon1.png");
+        this.ishgardianRestorationIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Ishgardian_restoration_icon1.png");
+        this.islandSanctuaryIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Island_sanctuary_icon1.png");
+        this.limitedIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Limited_icon1.png");
+        this.mainScenarioIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Main_scenario_icon1.png");
+        this.occultCrescentIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Occult_crescent_icon1.png");
+        this.premiumIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Premium_icon1.png");
+        this.pvpIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Pvp_icon1.png");
+        this.questsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Quests_icon1.png");
+        this.raidsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Raids_icon1.png");
+        this.seasonalEventsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Seasonal_events_icon1.png");
+        this.sharedFatesIcon1Path = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Shared_fates_icon1.png");
+        this.theHuntIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "The_hunt_icon1.png");
+        this.treasureHuntIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Treasure_hunt_icon1.png");
+        this.trialsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Trials_icon1.png");
+        this.unknownIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Unknown_Icon.png");
+        this.variantAndCriterionDungeonsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Variant_and_criterion_dungeons_icon1.png");
+        this.wondrousTailsIconPath = Path.Combine(Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!, "images", "types", "Wondrous_tails_icon1.png");
+                
         // Carregar database de informações da wiki
         MountSourceHelper.LoadDatabase(Plugin.PluginInterface);
 
@@ -118,13 +188,48 @@ public class ConfigWindow : Window, IDisposable
             return;
         }
 
-        // xxx
+        // info badges
         var mogImage = Plugin.TextureProvider.GetFromFile(mogImagePath).GetWrapOrDefault();
         var boardImage = Plugin.TextureProvider.GetFromFile(boardImagePath).GetWrapOrDefault();
         var musicImage = Plugin.TextureProvider.GetFromFile(musicImagePath).GetWrapOrDefault();
 
         // types
         var sharedFatesIcon = Plugin.TextureProvider.GetFromFile(sharedFatesIconPath).GetWrapOrDefault();
+        var achievementCurrencyIcon = Plugin.TextureProvider.GetFromFile(achievementCurrencyIconPath).GetWrapOrDefault();
+        var achievementsIcon = Plugin.TextureProvider.GetFromFile(achievementsIconPath).GetWrapOrDefault();
+        var airshipVenturesIcon = Plugin.TextureProvider.GetFromFile(airshipVenturesIconPath).GetWrapOrDefault();
+        var alliedSocietyQuestsIcon = Plugin.TextureProvider.GetFromFile(alliedSocietyQuestsIconPath).GetWrapOrDefault();
+        var bozjaIcon = Plugin.TextureProvider.GetFromFile(bozjaIconPath).GetWrapOrDefault();
+        var campaignsIcon = Plugin.TextureProvider.GetFromFile(campaignsIconPath).GetWrapOrDefault();
+        var chaoticAllianceRaidIcon = Plugin.TextureProvider.GetFromFile(chaoticAllianceRaidIconPath).GetWrapOrDefault();
+        var cosmicExplorationIcon = Plugin.TextureProvider.GetFromFile(cosmicExplorationIconPath).GetWrapOrDefault();
+        var craftingIcon = Plugin.TextureProvider.GetFromFile(craftingIconPath).GetWrapOrDefault();
+        var customDeliveriesIcon = Plugin.TextureProvider.GetFromFile(customDeliveriesIconPath).GetWrapOrDefault();
+        var deepDungeonsIcon = Plugin.TextureProvider.GetFromFile(deepDungeonsIconPath).GetWrapOrDefault();
+        var dungeonsIcon = Plugin.TextureProvider.GetFromFile(dungeonsIconPath).GetWrapOrDefault();
+        var eurekaIcon = Plugin.TextureProvider.GetFromFile(eurekaIconPath).GetWrapOrDefault();
+        var fatesIcon = Plugin.TextureProvider.GetFromFile(fatesIconPath).GetWrapOrDefault();
+        var fauxHollowsIcon = Plugin.TextureProvider.GetFromFile(fauxHollowsIconPath).GetWrapOrDefault();
+        var gatheringIcon = Plugin.TextureProvider.GetFromFile(gatheringIconPath).GetWrapOrDefault();
+        var gilIcon = Plugin.TextureProvider.GetFromFile(gilIconPath).GetWrapOrDefault();
+        var goldSaucerIcon = Plugin.TextureProvider.GetFromFile(goldSaucerIconPath).GetWrapOrDefault();
+        var ishgardianRestorationIcon = Plugin.TextureProvider.GetFromFile(ishgardianRestorationIconPath).GetWrapOrDefault();
+        var islandSanctuaryIcon = Plugin.TextureProvider.GetFromFile(islandSanctuaryIconPath).GetWrapOrDefault();
+        var limitedIcon = Plugin.TextureProvider.GetFromFile(limitedIconPath).GetWrapOrDefault();
+        var mainScenarioIcon = Plugin.TextureProvider.GetFromFile(mainScenarioIconPath).GetWrapOrDefault();
+        var occultCrescentIcon = Plugin.TextureProvider.GetFromFile(occultCrescentIconPath).GetWrapOrDefault();
+        var premiumIcon = Plugin.TextureProvider.GetFromFile(premiumIconPath).GetWrapOrDefault();
+        var pvpIcon = Plugin.TextureProvider.GetFromFile(pvpIconPath).GetWrapOrDefault();
+        var questsIcon = Plugin.TextureProvider.GetFromFile(questsIconPath).GetWrapOrDefault();
+        var raidsIcon = Plugin.TextureProvider.GetFromFile(raidsIconPath).GetWrapOrDefault();
+        var seasonalEventsIcon = Plugin.TextureProvider.GetFromFile(seasonalEventsIconPath).GetWrapOrDefault();
+        var sharedFatesIcon1 = Plugin.TextureProvider.GetFromFile(sharedFatesIcon1Path).GetWrapOrDefault();
+        var theHuntIcon = Plugin.TextureProvider.GetFromFile(theHuntIconPath).GetWrapOrDefault();
+        var treasureHuntIcon = Plugin.TextureProvider.GetFromFile(treasureHuntIconPath).GetWrapOrDefault();
+        var trialsIcon = Plugin.TextureProvider.GetFromFile(trialsIconPath).GetWrapOrDefault();
+        var unknownIcon = Plugin.TextureProvider.GetFromFile(unknownIconPath).GetWrapOrDefault();
+        var variantAndCriterionDungeonsIcon = Plugin.TextureProvider.GetFromFile(variantAndCriterionDungeonsIconPath).GetWrapOrDefault();
+        var wondrousTailsIcon = Plugin.TextureProvider.GetFromFile(wondrousTailsIconPath).GetWrapOrDefault();
 
         // ═══════════════════════════════════════════════════════════════
         // CABEÇALHO E CONTROLES
@@ -410,13 +515,57 @@ public class ConfigWindow : Window, IDisposable
 
                 // Coluna: Type
                 ImGui.TableSetColumnIndex(3);
-                if (sharedFatesIcon != null)
+
+                var iconType = mountInfo?.Type switch
+                {
+                    "Main Scenario" => mainScenarioIcon,
+                    "Quests" => questsIcon,
+                    "Premium" => premiumIcon,
+                    "Campaigns" => campaignsIcon,
+                    "Limited" => limitedIcon,
+                    "Seasonal Event" => seasonalEventsIcon,
+                    "Gold Saucer" => goldSaucerIcon,
+                    "Gil" => gilIcon,
+                    "Treasure Hunt" => treasureHuntIcon,
+                    "Dungeons" => dungeonsIcon,
+                    "V&C Dungeons" => variantAndCriterionDungeonsIcon,
+                    "Trials" => trialsIcon,
+                    "Raids" => raidsIcon,
+                    "Chaotic Alliance Raid" => chaoticAllianceRaidIcon,
+                    "Achievements" => achievementsIcon,
+                    "Achievement Certificates" => achievementCurrencyIcon,
+                    "Deep Dungeon" => deepDungeonsIcon,
+                    "FATE" => fatesIcon,
+                    "Shared FATEs" => sharedFatesIcon,
+                    "PvP" => pvpIcon,
+                    "PvP (Ranked)" => pvpIcon,
+                    "Crafting" => craftingIcon,
+                    "Gathering" => gatheringIcon,
+                    "The Hunt" => theHuntIcon,
+                    "Occult Crescent" => occultCrescentIcon,
+                    "Bozja" => bozjaIcon,
+                    "Ishgardian Restoration" => ishgardianRestorationIcon,
+                    "Cosmic Exploration" => cosmicExplorationIcon,
+                    "Heaven-on-High" => deepDungeonsIcon,
+                    "Eureka" => eurekaIcon,
+                    "Eureka Orthos" => deepDungeonsIcon,
+                    "Palace of the Dead" => deepDungeonsIcon,
+                    "Pilgrim's Traverse" => deepDungeonsIcon,
+                    "Custom Deliveries" => customDeliveriesIcon,
+                    "Faux Hollows" => fauxHollowsIcon,
+                    "Wondrous Tails" => wondrousTailsIcon,
+                    "Allied Societies" => alliedSocietyQuestsIcon,
+                    "Island Sanctuary" => islandSanctuaryIcon,
+                    _ => unknownIcon
+                };
+
+                if (iconType != null)
                 {
                     var cursorPos = ImGui.GetCursorPos();
                     cursorPos.Y += 5;
                     ImGui.SetCursorPos(cursorPos);
 
-                    ImGui.Image(sharedFatesIcon.Handle, new Vector2(50, 50));
+                    ImGui.Image(iconType.Handle, new Vector2(50, 50));
 
                     if (ImGui.IsItemHovered() && mountInfo != null)
                     {
@@ -475,7 +624,7 @@ public class ConfigWindow : Window, IDisposable
         ImGui.PopFont();
         ImGui.SameLine();
         ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1),
-            $"Tip: Leave 'Custom BGM' empty to use default mount music  | Musics Changed: {configuration.MountMusicOverrides.Count}");
+            $"Leave 'Custom BGM' empty to use default mount music  | Musics Changed: {configuration.MountMusicOverrides.Count}");
     }
 
     /// <summary>
