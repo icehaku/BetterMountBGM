@@ -17,7 +17,7 @@
   "TestingAssemblyVersion": "0.0.0.277",
   // "DownloadLinkTesting": "https://puni.sh/api/plugins/download/54/AutoDuty/versions/0.0.0.277/testing.zip",
   "TestingDalamudApiLevel": "13",
-  "IconUrl": "https://s3.puni.sh/media/plugin/54/icon-15ug2vnr9m1.png",
+  "IconUrl": "https://raw.githubusercontent.com/icehaku/BetterMountBGM/refs/heads/main/BetterMountBGM/images/icon.png",
   // "ImageUrls": [
   //   "https://s3.puni.sh/media/plugin/54/image-15l1o9gf3yg.png",
   //   "https://s3.puni.sh/media/plugin/54/image-gc84lu4pdpb.png",
