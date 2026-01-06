@@ -76,15 +76,32 @@ public sealed class Plugin : IDalamudPlugin
 
     public void Dispose()
     {
-        PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;
-        PluginInterface.UiBuilder.OpenConfigUi -= ToggleConfigUi;
-        PluginInterface.UiBuilder.OpenMainUi -= ToggleMainUi;
+        //CommandManager.RemoveHandler(CommandName);            
 
+        // 1. Reset BGM antes de descarregar plugin
+        try
+        {
+            unsafe
+            {
+                BGMSystem.Instance()->ResetBGM(0);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error resetting BGM on dispose: {ex.Message}");
+        }
+
+        // 2. Remover event handlers
+        PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;
+        PluginInterface.UiBuilder.OpenConfigUi -= ToggleMainUi;
+        PluginInterface.UiBuilder.OpenMainUi -= ToggleConfigUi;
+
+        // 3. Limpar windows
         WindowSystem.RemoveAllWindows();
         ConfigWindow.Dispose();
         MainWindow.Dispose();
 
-        //CommandManager.RemoveHandler(CommandName);
+        // 4. Remover framework update
         Framework.Update -= OnFrameworkUpdate;
     }
 

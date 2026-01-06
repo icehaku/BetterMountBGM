@@ -3,13 +3,383 @@
   "name": "Author Configuration",
   "author": "Ice",
   "mount_bgm_overrides": [
-    { "mount_id": 400, "mount_name": "Yan", "bgm_id": 20147, "bgm_name": "Back to the Drawing Board" },
-    { "mount_id": 343, "mount_name": "Air-wheeler A9", "bgm_id": 20047, "bgm_name": "Starless Skyline" },
-    { "mount_id": 263, "mount_name": "Argos", "bgm_id": 899, "bgm_name": "Flow Together" },
-    { "mount_id": 186, "mount_name": "Demi-Ozma", "bgm_id": 394, "bgm_name": "A Thousand Faces" },
-    { "mount_id": 312, "mount_name": "Blackjack", "bgm_id": 232, "bgm_name": "The Decisiv Battle" },
-    { "mount_id": 235, "mount_name": "Cerberus", "bgm_id": 796, "bgm_name": "The Queen Awakens" },
-    { "mount_id": 348, "mount_name": "Mehwapyarra", "bgm_id": 694, "bgm_name": "A Long Fall" },
-    { "mount_id": 207, "mount_name": "Forgiven Reticence", "bgm_id": 695, "bgm_name": "Insatiable" }
+    {
+      "mount_id": 343,
+      "mount_name": "air-wheeler A9",
+      "bgm_id": 873,
+      "bgm_name": "With Hearts Aligned",
+      "comment": ""
+    },
+    {
+      "mount_id": 263,
+      "mount_name": "Argos",
+      "bgm_id": 899,
+      "bgm_name": "Flow Together",
+      "comment": ""
+    },
+    {
+      "mount_id": 312,
+      "mount_name": "Blackjack",
+      "bgm_id": 232,
+      "bgm_name": "The Decisive Battle",
+      "comment": ""
+    },
+    {
+      "mount_id": 235,
+      "mount_name": "Cerberus",
+      "bgm_id": 796,
+      "bgm_name": "The Queen Awakens",
+      "comment": ""
+    },
+    {
+      "mount_id": 207,
+      "mount_name": "forgiven reticence",
+      "bgm_id": 695,
+      "bgm_name": "Insatiable",
+      "comment": ""
+    },
+    {
+      "mount_id": 400,
+      "mount_name": "yan",
+      "bgm_id": 20147,
+      "bgm_name": "Back to the Drawing Board",
+      "comment": ""
+    },
+    {
+      "mount_id": 348,
+      "mount_name": "mehwapyarra",
+      "bgm_id": 694,
+      "bgm_name": "A Long Fall",
+      "comment": ""
+    },
+    {
+      "mount_id": 1,
+      "mount_name": "company chocobo",
+      "bgm_id": 224,
+      "bgm_name": "Or the Egg",
+      "comment": ""
+    },
+    {
+      "mount_id": 45,
+      "mount_name": "black chocobo",
+      "bgm_id": 251,
+      "bgm_name": "Gateway to Paradise",
+      "comment": ""
+    },
+    {
+      "mount_id": 177,
+      "mount_name": "fat black chocobo",
+      "bgm_id": 252,
+      "bgm_name": "Sport of Kings",
+      "comment": ""
+    },
+    {
+      "mount_id": 25,
+      "mount_name": "fat chocobo",
+      "bgm_id": 252,
+      "bgm_name": "Sport of Kings",
+      "comment": ""
+    },
+    {
+      "mount_id": 336,
+      "mount_name": "Peatie",
+      "bgm_id": 520,
+      "bgm_name": "Siren Song",
+      "comment": ""
+    },
+    {
+      "mount_id": 73,
+      "mount_name": "zu",
+      "bgm_id": 185,
+      "bgm_name": "A Light in the Storm",
+      "comment": ""
+    },
+    {
+      "mount_id": 354,
+      "mount_name": "mountain zu",
+      "bgm_id": 346,
+      "bgm_name": "Upon the Rocks",
+      "comment": ""
+    },
+    {
+      "mount_id": 240,
+      "mount_name": "chocorpokkur",
+      "bgm_id": 322,
+      "bgm_name": "What is Love?",
+      "comment": ""
+    },
+    {
+      "mount_id": 150,
+      "mount_name": "tyrannosaur",
+      "bgm_id": 525,
+      "bgm_name": "No Quarter",
+      "comment": ""
+    },
+    {
+      "mount_id": 323,
+      "mount_name": "shadow wolf",
+      "bgm_id": 799,
+      "bgm_name": "Don\u0027t Be Afraid",
+      "comment": ""
+    },
+    {
+      "mount_id": 46,
+      "mount_name": "adamantoise",
+      "bgm_id": 197,
+      "bgm_name": "The Scars of Battle",
+      "comment": ""
+    },
+    {
+      "mount_id": 9,
+      "mount_name": "ahriman",
+      "bgm_id": 348,
+      "bgm_name": "Voidal Manifest",
+      "comment": ""
+    },
+    {
+      "mount_id": 209,
+      "mount_name": "albino karakul",
+      "bgm_id": 277,
+      "bgm_name": "Solid",
+      "comment": ""
+    },
+    {
+      "mount_id": 281,
+      "mount_name": "alkonost",
+      "bgm_id": 850,
+      "bgm_name": "Twilit Terraces",
+      "comment": ""
+    },
+    {
+      "mount_id": 344,
+      "mount_name": "alpaca",
+      "bgm_id": 20062,
+      "bgm_name": "Pastoral Pleasures",
+      "comment": ""
+    },
+    {
+      "mount_id": 242,
+      "mount_name": "antelope doe",
+      "bgm_id": 11,
+      "bgm_name": "Serenity",
+      "comment": ""
+    },
+    {
+      "mount_id": 243,
+      "mount_name": "antelope stag",
+      "bgm_id": 10,
+      "bgm_name": "Serenity",
+      "comment": ""
+    },
+    {
+      "mount_id": 110,
+      "mount_name": "Archon throne",
+      "bgm_id": 240,
+      "bgm_name": "Answers",
+      "comment": ""
+    },
+    {
+      "mount_id": 237,
+      "mount_name": "Arion",
+      "bgm_id": 829,
+      "bgm_name": "Endwalker",
+      "comment": ""
+    },
+    {
+      "mount_id": 18,
+      "mount_name": "behemoth",
+      "bgm_id": 147,
+      "bgm_name": "Calamity Unbound",
+      "comment": ""
+    },
+    {
+      "mount_id": 236,
+      "mount_name": "big shell",
+      "bgm_id": 498,
+      "bgm_name": "Indomitable",
+      "comment": ""
+    },
+    {
+      "mount_id": 27,
+      "mount_name": "bomb palanquin",
+      "bgm_id": 194,
+      "bgm_name": "Gluppity-Schlopp",
+      "comment": ""
+    },
+    {
+      "mount_id": 26,
+      "mount_name": "cavalry elbst",
+      "bgm_id": 195,
+      "bgm_name": "Breathless",
+      "comment": ""
+    },
+    {
+      "mount_id": 8,
+      "mount_name": "coeurl",
+      "bgm_id": 20212,
+      "bgm_name": "Civilizations (Pulse Vol. 2)",
+      "comment": ""
+    },
+    {
+      "mount_id": 213,
+      "mount_name": "Construct 14",
+      "bgm_id": 706,
+      "bgm_name": "Locus (The Primals)",
+      "comment": ""
+    },
+    {
+      "mount_id": 212,
+      "mount_name": "deinonychus",
+      "bgm_id": 632,
+      "bgm_name": "The Garden of Ru\u0027Hmet",
+      "comment": ""
+    },
+    {
+      "mount_id": 208,
+      "mount_name": "dhalmel",
+      "bgm_id": 278,
+      "bgm_name": "Night in the Brume",
+      "comment": ""
+    },
+    {
+      "mount_id": 92,
+      "mount_name": "disembodied head",
+      "bgm_id": 403,
+      "bgm_name": "The Gauntlet",
+      "comment": ""
+    },
+    {
+      "mount_id": 184,
+      "mount_name": "Eurekan petrel",
+      "bgm_id": 524,
+      "bgm_name": "Wicked Winds Whisper",
+      "comment": ""
+    },
+    {
+      "mount_id": 49,
+      "mount_name": "Fenrir",
+      "bgm_id": 107,
+      "bgm_name": "Pennons Aloft",
+      "comment": ""
+    },
+    {
+      "mount_id": 140,
+      "mount_name": "flying chair",
+      "bgm_id": 852,
+      "bgm_name": "Dreams of Man",
+      "comment": ""
+    },
+    {
+      "mount_id": 170,
+      "mount_name": "Grani",
+      "bgm_id": 761,
+      "bgm_name": "Shadowbringers",
+      "comment": ""
+    },
+    {
+      "mount_id": 54,
+      "mount_name": "griffin",
+      "bgm_id": 406,
+      "bgm_name": "Revenge Twofold",
+      "comment": ""
+    },
+    {
+      "mount_id": 130,
+      "mount_name": "Ixion",
+      "bgm_id": 470,
+      "bgm_name": "Triumph",
+      "comment": ""
+    },
+    {
+      "mount_id": 228,
+      "mount_name": "Jibanyan couch",
+      "bgm_id": 538,
+      "bgm_name": "Pa-Paya Demastered",
+      "comment": ""
+    },
+    {
+      "mount_id": 268,
+      "mount_name": "level checker",
+      "bgm_id": 882,
+      "bgm_name": "On Blade\u0027s Edge",
+      "comment": ""
+    },
+    {
+      "mount_id": 167,
+      "mount_name": "logistics node",
+      "bgm_id": 294,
+      "bgm_name": "Order Yet Undeciphered",
+      "comment": ""
+    },
+    {
+      "mount_id": 50,
+      "mount_name": "Midgardsormr",
+      "bgm_id": 244,
+      "bgm_name": "Primogenitor",
+      "comment": ""
+    },
+    {
+      "mount_id": 250,
+      "mount_name": "polar bear",
+      "bgm_id": 233,
+      "bgm_name": "The Warrens",
+      "comment": ""
+    },
+    {
+      "mount_id": 274,
+      "mount_name": "porxie king",
+      "bgm_id": 798,
+      "bgm_name": "Freshly Glazed Porxie",
+      "comment": ""
+    },
+    {
+      "mount_id": 22,
+      "mount_name": "nightmare",
+      "bgm_id": 739,
+      "bgm_name": "Bipolar Nightmare",
+      "comment": ""
+    },
+    {
+      "mount_id": 225,
+      "mount_name": "megalotragus",
+      "bgm_id": 271,
+      "bgm_name": "A Cold Wind",
+      "comment": ""
+    },
+    {
+      "mount_id": 55,
+      "mount_name": "manacutter",
+      "bgm_id": 789,
+      "bgm_name": "Heavensward",
+      "comment": ""
+    },
+    {
+      "mount_id": 373,
+      "mount_name": "petalodus",
+      "bgm_id": 20159,
+      "bgm_name": "A Tonberry\u0027s Tears",
+      "comment": ""
+    },
+    {
+      "mount_id": 352,
+      "mount_name": "qeziigural",
+      "bgm_id": 20153,
+      "bgm_name": "Find the Princess (Dawntrail)",
+      "comment": ""
+    },
+    {
+      "mount_id": 290,
+      "mount_name": "UFO",
+      "bgm_id": 986,
+      "bgm_name": "A Gentleman to Walk with Me",
+      "comment": ""
+    },
+    {
+      "mount_id": 125,
+      "mount_name": "yol",
+      "bgm_id": 20085,
+      "bgm_name": "Pathmaker",
+      "comment": ""
+    } 
   ]
 }

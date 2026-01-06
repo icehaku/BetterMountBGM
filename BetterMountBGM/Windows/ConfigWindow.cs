@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 //using ECommons.ImGuiMethods;
 
 namespace BetterMountBGM.Windows;
@@ -625,6 +627,12 @@ public class ConfigWindow : Window, IDisposable
         ImGui.SameLine();
         ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1),
             $"Leave 'Custom BGM' empty to use default mount music  | Musics Changed: {configuration.MountMusicOverrides.Count}");
+        //ImGui.SameLine();
+        //ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
+        //if (ImGui.Button("Export Config"))
+        //{
+        //    ExportConfiguration();
+        //}
     }
 
     /// <summary>
@@ -744,10 +752,12 @@ public class ConfigWindow : Window, IDisposable
                 ImGui.Image(icon.Handle, new Vector2(60, 60));
             }
 
-            // Tooltip no hover ✨
+            // Tooltip no hover da mount icon
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
+                ImGui.Text($"ID: {mount.MountId}");
+                ImGui.Text($"Patch Release: {mountInfo?.Patch}");
                 ImGui.EndTooltip();
             }
 
@@ -1078,6 +1088,39 @@ public class ConfigWindow : Window, IDisposable
         catch (Exception ex)
         {
             Plugin.Log.Error($"Error loading BGM database: {ex.Message}");
+        }
+    }
+    private void ExportConfiguration()
+    {
+        try
+        {
+            var exportConfig = new BGMConfiguration
+            {
+                Version = "1.0.0",
+                Name = "User Configuration",
+                Author = "User",
+                MountBgmOverrides = configuration.MountMusicOverrides
+                    .Select(kvp => new MountBGMOverride
+                    {
+                        MountId = kvp.Key,
+                        MountName = MountHelper.GetMountName(Plugin.DataManager, kvp.Key),
+                        BgmId = kvp.Value,
+                        BgmName = bgmList.FirstOrDefault(b => b.ID == kvp.Value)?.Title ?? ""
+                    })
+                    .ToList()
+            };
+
+            var json = JsonSerializer.Serialize(exportConfig, new JsonSerializerOptions { WriteIndented = true });
+            var exportPath = Path.Combine(
+                Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!,
+                "exported_config.json");
+
+            File.WriteAllText(exportPath, json);
+            Plugin.Log.Information($"Configuration exported to: {exportPath}");
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error($"Error exporting configuration: {ex.Message}");
         }
     }
 }

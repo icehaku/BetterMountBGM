@@ -35,6 +35,7 @@ public class MainWindow : Window, IDisposable
 
     public override void Draw()
     {
+        //ImGui.Text("0.0");
         var useAuthor = plugin.Configuration.UseAuthorBGMCustomization;
         ImGui.Checkbox("Use Author BGM Customization", ref useAuthor);
         ImGui.SameLine();

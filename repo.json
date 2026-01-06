@@ -11,7 +11,7 @@
 	  "LastUpdate": 1735689600,
 	  "DownloadLinkInstall": "https://github.com/icehaku/BetterMountBGM/releases/latest/download/latest.zip",
 	  "DownloadLinkUpdate": "https://github.com/icehaku/BetterMountBGM/releases/latest/download/latest.zip",
-	  "AssemblyVersion": "0.1.0.1",
+	  "AssemblyVersion": "0.1.1.0",
 	  "ApplicableVersion": "any",
 	  "DalamudApiLevel": "14",
 	  "Changelog": "...",
