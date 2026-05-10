@@ -1,9 +1,11 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
+using Lumina.Excel.Sheets.Experimental;
+using Serilog;
 using System;
 using System.IO;
 using System.Numerics;
@@ -35,7 +37,23 @@ public class MainWindow : Window, IDisposable
 
     public override void Draw()
     {
-        //ImGui.Text("0.0");
+        if (ImGui.Button("My Debug!"))
+        {
+            unsafe
+            {
+                var bgmSystem = BGMSystem.Instance();
+                Plugin.Log.Information("=== BGM System Scenes ===");  // ADICIONAR Plugin.
+                for (int i = 0; i < bgmSystem->NumScenes; i++)
+                {
+                    var sceneData = bgmSystem->Scenes[i];
+                    Plugin.Log.Information($"Scene {i}: BgmId={sceneData.BgmId}, PlayingBgmId={sceneData.PlayingBgmId}, PlayState={sceneData.PlayState}, InitialVolume={sceneData.InitialVolume}");
+                }
+                Plugin.Log.Information($"CurrentSituationKind: {bgmSystem->CurrentSituationKind}");
+                Plugin.Log.Information($"PlayBattleBGM: {bgmSystem->PlayBattleBGM}");
+            }
+        }
+
+        ImGui.Text("0.1");
         var useAuthor = plugin.Configuration.UseAuthorBGMCustomization;
         ImGui.Checkbox("Use Author BGM Customization", ref useAuthor);
         ImGui.SameLine();

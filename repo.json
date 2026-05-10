@@ -13,10 +13,10 @@
 	  "DownloadLinkUpdate": "https://github.com/icehaku/BetterMountBGM/releases/latest/download/latest.zip",
 	  "AssemblyVersion": "0.1.1.0",
 	  "ApplicableVersion": "any",
-	  "DalamudApiLevel": "14",
+	  "DalamudApiLevel": "15",
 	  "Changelog": "...",
 	  "TestingAssemblyVersion": "0.1.0.1",
 	  "DownloadLinkTesting": "https://github.com/icehaku/BetterMountBGM/releases/latest/download/latest.zip",
-	  "TestingDalamudApiLevel": "14",
+	  "TestingDalamudApiLevel": "14"
 	}
 ]

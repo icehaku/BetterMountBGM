@@ -83,7 +83,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             unsafe
             {
-                BGMSystem.Instance()->ResetBGM(0);
+                BGMSystem.Instance()->ResetBGM(5);
             }
         }
         catch (Exception ex)
@@ -200,7 +200,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             unsafe
             {
-                BGMSystem.Instance()->ResetBGM(0);
+                BGMSystem.Instance()->ResetBGM(5);
             }
         }
         catch (Exception ex)
@@ -211,20 +211,34 @@ public sealed class Plugin : IDalamudPlugin
 
     private void ApplyBGM(ushort bgmId)
     {
-        System.Threading.Tasks.Task.Delay(150).ContinueWith(_ =>
+        Framework.RunOnTick(() =>
         {
-            Framework.RunOnFrameworkThread(() =>
+            try
             {
-                try
+                //     0 = Event
+                //     1 = Battle
+                //     2 = MiniGame (RhythmAction, TurnBreak)
+                //     3 = Content
+                //     4 = GFate
+                //     5 = Duel
+                //     6 = Mount
+                //     7 = Unknown, no xrefs
+                //     8 = Unknown, via packet (near PlayerState stuff)
+                //     9 = Wedding
+                //     10 = Town
+                //     11 = Territory
+                unsafe
                 {
-                    unsafe { BGMSystem.SetBGM(bgmId, 0); }
+                    BGMSystem.Instance()->ResetBGM(0);
+                    BGMSystem.SetBGM(bgmId, 5);
                 }
-                catch (Exception ex)
-                {
-                    Log.Error($"Error setting BGM: {ex.Message}");
-                }
-            });
-        });
+                // MemberFunctionPointers.SetBGM(bgmId, sceneId, a3, enableCustomFade, fadeOutMs, fadeInMs, fadeInStartMs, a8, a9, initialVolume);
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Error setting BGM: {ex.Message}");
+            }
+        }, delay: TimeSpan.FromMilliseconds(150));
     }
 
     private void LoadAuthorBGMConfig()

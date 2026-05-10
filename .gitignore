@@ -4,3 +4,6 @@ bin/
 *.user
 BetterMountBGM/obj/
 BetterMountBGM/bin/
+CLAUDE.md
+project.md
+release.sh
