@@ -12,7 +12,7 @@
   "InternalName": "BetterMountBGM",
   "RepoUrl": "images/icon.png",
   "DownloadCount": 777,
-  "LastUpdate": 1778426815,
+  "LastUpdate": 1778426917,
   "DownloadLinkInstall": "https://github.com/icehaku/BetterMountBGM/releases/latest/download/latest.zip",
   "DownloadLinkUpdate": "https://github.com/icehaku/BetterMountBGM/releases/latest/download/latest.zip",
   "AssemblyVersion": "0.1.2.0",
@@ -21,7 +21,7 @@
   "Changelog": "...",
   "TestingAssemblyVersion": "0.1.2.0",
   "DownloadLinkTesting": "https://github.com/icehaku/BetterMountBGM/releases/latest/download/latest.zip",
-  "TestingDalamudApiLevel": "14",
+  "TestingDalamudApiLevel": "15",
   "IconUrl": "https://github.com/icehaku/BetterMountBGM/blob/main/BetterMountBGM/images/icon.png",
   "ImageUrls": [
     "images/image1.png",
